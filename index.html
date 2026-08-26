@@ -3,91 +3,98 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>MyGoTo Interactive Catalog</title>
+  <title>MyGoTo</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=Syne:wght@700;800&display=swap" rel="stylesheet">
   <style>
     :root {
-      color-scheme: light dark;
-      --bg: #f5f7fb;
-      --panel: #ffffff;
-      --text: #1f2937;
-      --muted: #5b6472;
-      --line: #dbe2ea;
-      --brand: #3a67f6;
-      --brand-soft: #e8eeff;
-      --ok: #1f7a4c;
-      --warn: #9a6700;
-      --chip: #eff3f9;
-      --chip-active: #dfe8ff;
-      --shadow: 0 4px 16px rgba(20, 28, 45, 0.08);
-      --radius: 14px;
-    }
-
-    @media (prefers-color-scheme: dark) {
-      :root {
-        --bg: #0f131a;
-        --panel: #161c25;
-        --text: #eaf1ff;
-        --muted: #a8b3c7;
-        --line: #2a3342;
-        --brand: #87a9ff;
-        --brand-soft: #1b2745;
-        --ok: #6edaa0;
-        --warn: #f6cc78;
-        --chip: #212c3b;
-        --chip-active: #2b3f66;
-        --shadow: 0 8px 22px rgba(0, 0, 0, 0.35);
-      }
+      color-scheme: dark;
+      --bg: #0a0a0a;
+      --panel: #111111;
+      --text: #f2f2f2;
+      --muted: #8a8a8a;
+      --line: #2a2a2a;
+      --accent: #ffe600;
+      --danger: #ff4d4d;
+      --hard: 4px 4px 0 #000;
     }
 
     * { box-sizing: border-box; }
+
     body {
       margin: 0;
-      font-family: Inter, "Segoe UI", Roboto, Arial, sans-serif;
-      background: linear-gradient(180deg, var(--bg), var(--bg));
+      font-family: "IBM Plex Mono", ui-monospace, monospace;
       color: var(--text);
       line-height: 1.45;
+      background-color: var(--bg);
+      background-image:
+        linear-gradient(var(--line) 1px, transparent 1px),
+        linear-gradient(90deg, var(--line) 1px, transparent 1px);
+      background-size: 28px 28px;
+      background-attachment: fixed;
     }
 
     .container {
-      max-width: 1080px;
+      max-width: 1120px;
       margin: 0 auto;
-      padding: 20px 16px 32px;
+      padding: 20px 16px 48px;
     }
 
     .skip-link {
       position: absolute;
-      top: -40px;
+      top: -48px;
       left: 8px;
-      background: var(--brand);
-      color: #fff;
-      padding: 8px 10px;
-      border-radius: 8px;
+      background: var(--accent);
+      color: #000;
+      padding: 8px 12px;
+      border: 2px solid #000;
       text-decoration: none;
+      font-weight: 600;
       z-index: 1000;
     }
     .skip-link:focus { top: 8px; }
 
     .header {
       background: var(--panel);
-      border: 1px solid var(--line);
-      border-radius: var(--radius);
-      box-shadow: var(--shadow);
-      padding: 16px;
-      margin-bottom: 14px;
+      border: 2px solid var(--text);
+      box-shadow: var(--hard);
+      padding: 18px 16px 16px;
+      margin-bottom: 18px;
       position: sticky;
-      top: 8px;
+      top: 0;
       z-index: 10;
+      transition: border-color 80ms linear, box-shadow 80ms linear;
+    }
+    .header.is-stuck {
+      border-color: var(--accent);
+      box-shadow: 4px 4px 0 var(--accent);
     }
 
-    h1 {
-      margin: 0 0 6px;
-      font-size: 1.35rem;
-      letter-spacing: 0.1px;
+    .brand {
+      margin: 0;
+      font-family: Syne, sans-serif;
+      font-weight: 800;
+      font-size: clamp(2.4rem, 8vw, 4.2rem);
+      line-height: 0.92;
+      letter-spacing: -0.04em;
+      text-transform: uppercase;
     }
+    .brand span {
+      display: inline-block;
+      background: var(--accent);
+      color: #000;
+      padding: 0 0.12em;
+      margin-left: 0.06em;
+    }
+
     .sub {
-      margin: 0 0 12px;
+      margin: 10px 0 16px;
       color: var(--muted);
-      font-size: 0.95rem;
+      font-size: 0.82rem;
+      max-width: 42rem;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
     }
 
     .search-wrap {
@@ -95,29 +102,58 @@
       grid-template-columns: 1fr auto;
       gap: 8px;
       margin-bottom: 10px;
+      align-items: stretch;
+    }
+
+    .copy-prompt-btn {
+      border: 2px solid #000;
+      background: var(--accent);
+      color: #000;
+      border-radius: 0;
+      padding: 10px 12px;
+      font: inherit;
+      font-size: 0.72rem;
+      font-weight: 600;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+      cursor: pointer;
+      white-space: nowrap;
+      box-shadow: 3px 3px 0 #000;
+    }
+    .copy-prompt-btn:hover {
+      transform: translate(2px, 2px);
+      box-shadow: 1px 1px 0 #000;
+    }
+    .copy-prompt-btn.is-done {
+      background: #fff;
     }
 
     input[type="search"] {
       width: 100%;
-      border: 1px solid var(--line);
-      border-radius: 10px;
-      padding: 10px 12px;
-      background: var(--panel);
+      border: 2px solid var(--text);
+      border-radius: 0;
+      padding: 12px 14px;
+      background: #000;
       color: var(--text);
-      font-size: 0.95rem;
+      font: inherit;
+      font-size: 0.9rem;
     }
+    input[type="search"]::placeholder { color: #666; }
+
     input[type="search"]:focus-visible,
     button:focus-visible,
     a:focus-visible,
     summary:focus-visible {
-      outline: 2px solid var(--brand);
+      outline: 2px solid var(--accent);
       outline-offset: 2px;
     }
 
     .stats {
       color: var(--muted);
-      font-size: 0.9rem;
-      margin: 4px 0 8px;
+      font-size: 0.75rem;
+      margin: 0 0 10px;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
     }
 
     .chips {
@@ -127,32 +163,47 @@
     }
 
     .chip {
-      border: 1px solid var(--line);
-      background: var(--chip);
+      border: 2px solid var(--text);
+      background: #000;
       color: var(--text);
-      border-radius: 999px;
-      padding: 6px 12px;
-      font-size: 0.88rem;
+      border-radius: 0;
+      padding: 7px 12px;
+      font: inherit;
+      font-size: 0.75rem;
+      font-weight: 500;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
       cursor: pointer;
-      transition: background-color 160ms ease, border-color 160ms ease;
+      transition: none;
     }
+    .chip:hover { background: #1a1a1a; }
     .chip.active {
-      background: var(--chip-active);
-      border-color: var(--brand);
+      background: var(--accent);
+      color: #000;
+      border-color: #000;
+      box-shadow: 3px 3px 0 #000;
     }
 
     .grid {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-      gap: 12px;
+      grid-template-columns: repeat(auto-fit, minmax(270px, 1fr));
+      gap: 14px;
     }
 
     .card {
       background: var(--panel);
-      border: 1px solid var(--line);
-      border-radius: var(--radius);
-      box-shadow: var(--shadow);
+      border: 2px solid var(--text);
+      border-left: 6px solid var(--text);
+      border-radius: 0;
       padding: 14px;
+      box-shadow: var(--hard);
+      animation: cardIn 280ms steps(4, end) both;
+    }
+    .card:hover { border-left-color: var(--accent); }
+
+    @keyframes cardIn {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
     }
 
     .top {
@@ -160,42 +211,53 @@
       justify-content: space-between;
       gap: 8px;
       align-items: flex-start;
-      margin-bottom: 8px;
+      margin-bottom: 10px;
+      padding-bottom: 8px;
+      border-bottom: 2px solid var(--line);
     }
     .title {
       margin: 0;
-      font-size: 1rem;
+      font-family: Syne, sans-serif;
+      font-weight: 700;
+      font-size: 1.15rem;
+      letter-spacing: -0.02em;
+      line-height: 1.15;
     }
 
     .badge {
       white-space: nowrap;
-      font-size: 0.75rem;
-      padding: 3px 8px;
-      border-radius: 999px;
-      border: 1px solid var(--line);
-      color: var(--muted);
-      background: transparent;
+      font-size: 0.65rem;
+      padding: 4px 7px;
+      border-radius: 0;
+      border: 2px solid var(--text);
+      color: var(--text);
+      background: #000;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      font-weight: 600;
     }
 
     .summary {
       margin: 0 0 8px;
-      font-size: 0.92rem;
+      font-size: 0.86rem;
     }
     .label {
       font-weight: 600;
-      font-size: 0.84rem;
+      font-size: 0.72rem;
       color: var(--muted);
-      margin-right: 4px;
+      margin-right: 6px;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
     }
     .line {
       margin: 6px 0;
-      font-size: 0.9rem;
+      font-size: 0.84rem;
       color: var(--text);
     }
     .note {
       margin-top: 8px;
-      color: var(--warn);
-      font-size: 0.84rem;
+      color: var(--danger);
+      font-size: 0.78rem;
     }
     .tags {
       display: flex;
@@ -204,60 +266,104 @@
       margin-top: 8px;
     }
     .tag {
-      font-size: 0.76rem;
+      font-size: 0.68rem;
       border: 1px solid var(--line);
       color: var(--muted);
-      border-radius: 999px;
-      padding: 2px 7px;
+      border-radius: 0;
+      padding: 2px 6px;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
     }
     .actions {
-      margin-top: 10px;
+      margin-top: 12px;
       display: flex;
       gap: 8px;
       align-items: center;
     }
     .link-btn {
       text-decoration: none;
-      background: var(--brand-soft);
-      color: var(--brand);
-      border: 1px solid var(--line);
-      border-radius: 10px;
-      padding: 7px 11px;
-      font-size: 0.86rem;
+      background: var(--accent);
+      color: #000;
+      border: 2px solid #000;
+      border-radius: 0;
+      padding: 8px 12px;
+      font-size: 0.78rem;
       font-weight: 600;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
       display: inline-block;
+      box-shadow: 3px 3px 0 #000;
+    }
+    .link-btn:hover {
+      transform: translate(2px, 2px);
+      box-shadow: 1px 1px 0 #000;
     }
 
     details {
-      margin-top: 6px;
-      border-top: 1px dashed var(--line);
-      padding-top: 6px;
+      margin-top: 8px;
+      border-top: 2px solid var(--line);
+      padding-top: 8px;
     }
     summary {
       cursor: pointer;
       color: var(--muted);
-      font-size: 0.85rem;
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      list-style: none;
+    }
+    summary::-webkit-details-marker { display: none; }
+    summary::before { content: "+ "; color: var(--accent); font-weight: 700; }
+    details[open] summary::before { content: "− "; }
+
+    code {
+      font-family: inherit;
+      font-size: 0.78rem;
+      background: #000;
+      border: 1px solid var(--line);
+      padding: 1px 4px;
+      word-break: break-all;
     }
 
     .empty {
       grid-column: 1 / -1;
       background: var(--panel);
-      border: 1px dashed var(--line);
-      border-radius: var(--radius);
-      padding: 18px;
+      border: 2px dashed var(--muted);
+      border-radius: 0;
+      padding: 28px;
       color: var(--muted);
       text-align: center;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      font-size: 0.8rem;
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after {
+        animation: none !important;
+        transition: none !important;
+      }
+      .link-btn:hover {
+        transform: none;
+        box-shadow: 3px 3px 0 #000;
+      }
+    }
+
+    @media (max-width: 600px) {
+      .brand { font-size: 2.35rem; }
+      .header { top: 0; }
     }
   </style>
 </head>
 <body>
   <a class="skip-link" href="#catalog">Skip to catalog</a>
   <div class="container">
-    <header class="header">
-      <h1>MyGoTo Interactive Catalog</h1>
-      <p class="sub">One place for skills, tools, UI references, and platforms. Plain English. Quick choice.</p>
+    <header class="header" id="header">
+      <h1 class="brand">My<span>GoTo</span></h1>
+      <p class="sub">Skills · tools · UI kits · platforms — plain English, pick fast.</p>
       <div class="search-wrap">
-        <input id="search" type="search" placeholder="Search by name, use case, tag, source..." aria-label="Search catalog">
+        <input id="search" type="search" placeholder="Search name, use case, tag, source..." aria-label="Search catalog">
+        <button type="button" class="copy-prompt-btn" id="copy-prompt" aria-label="Copy project picker prompt">Copy project prompt</button>
       </div>
       <p id="stats" class="stats" aria-live="polite"></p>
       <div class="chips" id="chips" role="toolbar" aria-label="Category filters"></div>
@@ -267,43 +373,42 @@
 
   <script>
     const entries = [
-      { id: "stirlingpdf", name: "Stirling PDF", category: "tool", tags: ["pdf", "docs"], summary: "Open-source PDF toolbox in browser.", useFor: "Merge, split, compress, rotate, OCR and quick PDF tasks.", skipWhen: "You need enterprise workflow automation across many users.", link: "https://www.stirlingpdf.com/", sourceNote: null, installHint: null },
-      { id: "strix", name: "Strix", category: "tool", tags: ["github", "agent"], summary: "Developer tool from GitHub reference in your list.", useFor: "Explore if you need an agent-style developer utility.", skipWhen: "You already have a stable workflow in Cursor and this adds overhead.", link: "https://github.com/usestrix/strix", sourceNote: null, installHint: null },
-      { id: "nextinfashion-share", name: "Nextinfashion (Source link)", category: "platform", tags: ["inspiration", "share-link"], summary: "Referenced source from WhatsApp dump.", useFor: "Open and decide if it is trend/design inspiration for your current task.", skipWhen: "You need a concrete coding tool right now.", link: "https://share.google/MqBJ2jo8IKGOEnytW", sourceNote: "WhatsApp share link — verify destination.", installHint: null },
-      { id: "github-share-1", name: "GitHub (Source link)", category: "platform", tags: ["github", "share-link"], summary: "Unresolved GitHub source item from the list.", useFor: "Open and identify the exact repo before adding to your workflow.", skipWhen: "You need known, verified docs immediately.", link: "https://share.google/T77FNIgWFFi8C8WUJ", sourceNote: "WhatsApp share link — verify destination.", installHint: null },
-      { id: "skills-addy", name: "skills.addy.ie", category: "skill", tags: ["skill-registry", "agent"], summary: "Skill discovery hub for coding agents.", useFor: "Find skills by workflow instead of manually searching random repos.", skipWhen: "You already know exact skill name and install command.", link: "https://skills.addy.ie/", sourceNote: null, installHint: null },
-      { id: "mattpocock-skills", name: "Matt Pocock Skills", category: "skill", tags: ["engineering", "workflow"], summary: "Big practical skill set for real engineering workflows.", useFor: "Structured flows: grilling, TDD, architecture, spec-to-implement.", skipWhen: "Task is tiny and a direct prompt is faster.", link: "https://github.com/mattpocock/skills", sourceNote: null, installHint: "npx skills@latest add mattpocock/skills" },
-      { id: "agent-reach", name: "agent-reach", category: "tool", tags: ["agent", "github"], summary: "Agent-related open-source project from your list.", useFor: "Evaluate when exploring orchestration or agent interaction ideas.", skipWhen: "You only need a simple local script.", link: "https://github.com/Panniantong/agent-reach", sourceNote: null, installHint: null },
-      { id: "spec-kit", name: "Spec Kit", category: "tool", tags: ["spec", "planning"], summary: "Spec-first toolkit from GitHub.", useFor: "Turn fuzzy requirements into a concrete implementation spec.", skipWhen: "You already have a clear small ticket.", link: "https://github.com/github/spec-kit", sourceNote: null, installHint: null },
-      { id: "one-skill-to-rule", name: "One Skill to Rule Them All", category: "skill", tags: ["meta-skill", "agent"], summary: "Meta skill approach for agent behavior guidance.", useFor: "Standardize behavior across recurring agent tasks.", skipWhen: "You need a task-specific focused skill.", link: "https://github.com/rebelytics/one-skill-to-rule-them-all", sourceNote: null, installHint: null },
-      { id: "headroom", name: "Headroom", category: "tool", tags: ["ai", "workflow"], summary: "AI/developer workflow project from GitHub.", useFor: "Test if it helps reduce repetitive setup in your workflow.", skipWhen: "A simple markdown checklist is enough.", link: "https://github.com/headroomlabs-ai/headroom", sourceNote: null, installHint: null },
-      { id: "npxskillui", name: "npxskillui", category: "tool", tags: ["skills", "ui"], summary: "Utility around skill usage/UI workflows.", useFor: "If you want a quicker visual way to interact with skill sets.", skipWhen: "CLI-only workflow is already comfortable for you.", link: "https://github.com/amaancoderx/npxskillui", sourceNote: null, installHint: null },
-      { id: "context7", name: "Context7", category: "tool", tags: ["context", "docs"], summary: "Tool for getting better context in AI coding flows.", useFor: "When agent output is generic and lacks project-specific grounding.", skipWhen: "Task is one-file and context is obvious.", link: "https://context7.com/", sourceNote: null, installHint: null },
-      { id: "n8n-share", name: "n8n (Source link)", category: "automation", tags: ["automation", "workflow"], summary: "Automation platform reference from your notes.", useFor: "Automate repetitive integrations and scheduled workflows.", skipWhen: "A local script solves it in minutes.", link: "https://share.google/UpUS4O8aYTx0H1taR", sourceNote: "WhatsApp share link — verify destination.", installHint: null },
-      { id: "deploysafe-share", name: "DeploySafe (Source link)", category: "security", tags: ["deploy", "safety"], summary: "Deployment safety/security reference from your list.", useFor: "Check for release risk controls and safer deployment practices.", skipWhen: "No deployment action is involved.", link: "https://share.google/KwwaNA6lqe8NBlqz2", sourceNote: "WhatsApp share link — verify destination.", installHint: null },
-      { id: "uiux-promax", name: "UI UX Pro Max", category: "guideline", tags: ["ui", "ux", "design"], summary: "Design intelligence library with styles, palettes, and patterns.", useFor: "Quickly pick style direction for landing pages and dashboards.", skipWhen: "You already have a strict product design system.", link: "https://share.google/OeUb52ms4C3P5EIaz", sourceNote: "Resolved from share link; keep as source reference.", installHint: null },
-      { id: "taste-skill", name: "Taste Skill", category: "skill", tags: ["ui", "anti-slop"], summary: "Anti-generic frontend skill for coding agents.", useFor: "Very unique UI different from AI-generated defaults.", skipWhen: "You need plain internal CRUD UI and speed is top priority.", link: "https://share.google/XXwv7Iwm7XMBInKCB", sourceNote: "Resolved from share link; canonical repo can be added later.", installHint: "npx skills add https://github.com/Leonxlnx/taste-skill --skill \"design-taste-frontend\"" },
-      { id: "motion-principles", name: "Design Motion Principles", category: "skill", tags: ["motion", "animation"], summary: "Two-mode motion skill: build or audit interaction animation.", useFor: "Add polished motion to cards/modals or audit existing animation quality.", skipWhen: "Static data page with no meaningful interactions.", link: "https://github.com/kylezantos/design-motion-principles", sourceNote: null, installHint: "npx skills add kylezantos/design-motion-principles" },
-      { id: "vercel-guidelines", name: "Web Interface Guidelines", category: "guideline", tags: ["accessibility", "ux"], summary: "Detailed practical UI/UX quality checklist.", useFor: "Dashboard quality pass: focus states, forms, loading, a11y, performance.", skipWhen: "You need rough prototype only and will refine later.", link: "https://share.google/pp9dGV7WGYQwPQe6N", sourceNote: "Resolved from share link; source aligns with Vercel guidelines.", installHint: null },
-      { id: "awesome-design-skills", name: "Awesome Design Skills", category: "skill", tags: ["design-system", "registry"], summary: "Large registry of design skill files.", useFor: "Browse many visual directions and pull one style skill quickly.", skipWhen: "You are likely to over-switch styles mid-project.", link: "https://github.com/bergside/awesome-design-skills", sourceNote: null, installHint: "npx typeui.sh list" },
-      { id: "github-share-2", name: "GitHub (Source link 2)", category: "platform", tags: ["github", "share-link"], summary: "Unresolved GitHub source item from list line 20.", useFor: "Open and identify exact repo, then classify into skill/tool.", skipWhen: "You need immediate trusted docs.", link: "https://share.google/YdddIJWq6LcwXGWA6", sourceNote: "WhatsApp share link — verify destination.", installHint: null },
-      { id: "shadcn-skills-docs", name: "shadcn Skills / MCP Docs", category: "guideline", tags: ["shadcn", "mcp"], summary: "Official shadcn docs for skills and MCP usage.", useFor: "When building component-heavy UI with accurate, latest shadcn patterns.", skipWhen: "Project does not use shadcn ecosystem.", link: "https://ui.shadcn.com/docs/skills", sourceNote: "Original share link timed out; mapped to official docs.", installHint: null },
-      { id: "mattpocock-skills-share", name: "Matt Pocock Skills (source)", category: "skill", tags: ["workflow", "engineering"], summary: "Duplicate source entry to same skills ecosystem.", useFor: "Use when you want proven workflow skills in Cursor.", skipWhen: "Task is one-step and does not need process overhead.", link: "https://github.com/mattpocock/skills", sourceNote: "Mapped from share link source.", installHint: "npx skills@latest add mattpocock/skills" },
-      { id: "google-aistudio", name: "Google AI Studio", category: "platform", tags: ["llm", "google"], summary: "Prompting and model playground platform.", useFor: "Quick model tests, prompt drafts, and API exploration.", skipWhen: "You need local repo-aware coding actions in Cursor.", link: "https://aistudio.google.com/", sourceNote: "Source from WhatsApp; share link blocked.", installHint: null },
-      { id: "github-share-3", name: "GitHub (Source link 3)", category: "platform", tags: ["github", "share-link"], summary: "Unresolved GitHub source entry.", useFor: "Open to discover if it is a skill, tool, or reference repo.", skipWhen: "You only want already-verified tools.", link: "https://share.google/Nli1X76gIAYVnxrfR", sourceNote: "WhatsApp share link — verify destination.", installHint: null },
-      { id: "github-share-4", name: "GitHub (Source link 4)", category: "platform", tags: ["github", "share-link"], summary: "Unresolved GitHub source entry.", useFor: "Open to identify target repository and decide fit.", skipWhen: "You need known resources now.", link: "https://share.google/pymxLTznK11RDDRaP", sourceNote: "WhatsApp share link — verify destination.", installHint: null },
-      { id: "animejs", name: "Anime.js", category: "tool", tags: ["animation", "frontend"], summary: "Fast animation engine for web.", useFor: "Custom interaction-heavy animations beyond plain CSS transitions.", skipWhen: "Simple UI state transitions can be done with CSS only.", link: "https://animejs.com/", sourceNote: "Resolved from share link.", installHint: "npm i animejs" },
-      { id: "motion-dev", name: "Motion (prev Framer Motion)", category: "tool", tags: ["react", "animation"], summary: "Production-grade motion library for React/JS/Vue.", useFor: "Animated dashboards, modals, layout transitions in React apps.", skipWhen: "You are shipping plain static HTML with tiny micro-interactions.", link: "https://motion.dev/", sourceNote: "Resolved from share link.", installHint: "npm i motion" },
-      { id: "kokonutui", name: "KokonutUI", category: "ui-kit", tags: ["react", "tailwind", "shadcn"], summary: "Open-source animated components and templates.", useFor: "Faster landing/dashboard UI assembly with ready-made components.", skipWhen: "You need unique bespoke design language from scratch.", link: "https://kokonutui.com/", sourceNote: "Resolved from share link.", installHint: "npx shadcn@latest add @kokonutui/<component>" },
-      { id: "bklit-ui", name: "Bklit UI", category: "ui-kit", tags: ["charts", "data-viz"], summary: "Design-focused data visualization component collection.", useFor: "Dashboard charts that should look polished quickly.", skipWhen: "Basic charting library already satisfies your need.", link: "https://bklit.com/", sourceNote: "Resolved from share link.", installHint: null },
-      { id: "playwright", name: "Playwright", category: "tool", tags: ["testing", "e2e"], summary: "End-to-end browser testing framework.", useFor: "Regression tests for forms, auth flows, and dashboard actions.", skipWhen: "One-off manual check is enough for a tiny prototype.", link: "https://playwright.dev/", sourceNote: "Source from WhatsApp; mapped to official site.", installHint: "npm init playwright@latest" },
-      { id: "google-labs-1", name: "Google Labs (Source link)", category: "platform", tags: ["google", "experiments"], summary: "Google experimental tools reference.", useFor: "Explore new AI/productivity experiments before they become mainstream.", skipWhen: "You need stable production features only.", link: "https://share.google/JUe84GWqF9YMXXd5H", sourceNote: "WhatsApp share link — verify destination.", installHint: null },
-      { id: "stitch-share", name: "Stitch (Source link)", category: "platform", tags: ["design", "ui"], summary: "Stitch-related source item from your notes.", useFor: "Check if it fits design-to-UI workflows for faster prototyping.", skipWhen: "You need fully custom hand-written frontend code first.", link: "https://share.google/7rZycCZMGQHEjjs2D", sourceNote: "WhatsApp share link — verify destination.", installHint: null },
-      { id: "opal-share", name: "Opal (Source link)", category: "tool", tags: ["ai", "workflow"], summary: "Opal-related tool reference from your list.", useFor: "Explore for AI-assisted workflow support if relevant to your stack.", skipWhen: "Current toolchain already covers the same use case.", link: "https://share.google/jt8jH4vCczm7Hgrkp", sourceNote: "WhatsApp share link — verify destination.", installHint: null },
-      { id: "google-gemini", name: "Google Gemini", category: "platform", tags: ["llm", "google"], summary: "Gemini model ecosystem and assistant platform.", useFor: "Model comparison, prompting, and multimodal experimentation.", skipWhen: "You only need repo-local implementation help in Cursor.", link: "https://gemini.google.com/", sourceNote: "Source from WhatsApp; share link may redirect.", installHint: null },
-      { id: "google-labs-2", name: "Google Labs (Source link 2)", category: "platform", tags: ["google", "experiments"], summary: "Another Google Labs source reference.", useFor: "Follow experimental launches relevant to your workflow.", skipWhen: "Project requires proven long-term APIs.", link: "https://share.google/uEVpC4vF7cnMJxIa2", sourceNote: "WhatsApp share link — verify destination.", installHint: null },
-      { id: "i-have-adhd", name: "i-have-adhd Skill", category: "skill", tags: ["productivity", "output-style"], summary: "Skill that makes agent output concise and action-first.", useFor: "Dashboard and task responses that should be easy to scan fast.", skipWhen: "You specifically need long-form exploratory discussion.", link: "https://github.com/ayghri/i-have-adhd", sourceNote: null, installHint: "npx skills add ayghri/i-have-adhd" },
-      { id: "jules", name: "Jules (Google)", category: "platform", tags: ["google", "agent"], summary: "Google's coding agent platform reference.", useFor: "Try alternate coding-agent workflow and compare productivity.", skipWhen: "Cursor setup already handles your full flow.", link: "https://jules.google/", sourceNote: null, installHint: null }
+      { id: "stirlingpdf", name: "Stirling PDF", category: "tool", tags: ["pdf","docs"], summary: "Open-source PDF toolbox that runs in the browser.", useFor: "Merge, split, compress, rotate, OCR, and other quick PDF jobs.", skipWhen: "You need multi-user enterprise PDF workflow automation.", link: "https://www.stirlingpdf.com/", sourceNote: null, installHint: null, cursorHow: "Open in browser for PDF chores. Ask Cursor only if you need a script that calls its API or automates a repeat PDF step." },
+      { id: "strix", name: "Strix", category: "security", tags: ["pentest","agent","ci"], summary: "Open-source AI penetration testing agents that find and validate vulnerabilities.", useFor: "Scan an app or PR for real security issues before ship.", skipWhen: "You only need lint/typecheck and are not doing a security pass.", link: "https://github.com/usestrix/strix", sourceNote: null, installHint: "curl -sSL https://strix.ai/install | bash", cursorHow: "Install CLI, run a scan on this repo or URL, paste findings into Cursor and ask it to fix each issue." },
+      { id: "nextinfashion", name: "Next in Fashion", category: "platform", tags: ["inspiration","fashion","share-link"], summary: "Fashion/design inspiration source from your WhatsApp dump.", useFor: "Moodboard-style visual direction when a UI needs trend cues.", skipWhen: "You need a coding library or installable skill right now.", link: "https://share.google/MqBJ2jo8IKGOEnytW", sourceNote: "WhatsApp share link — verify destination.", installHint: null, cursorHow: "Open in browser for inspiration. Describe the look to Cursor; not an installable skill." },
+      { id: "github-share-1", name: "GitHub share (unresolved)", category: "platform", tags: ["github","share-link"], summary: "GitHub destination still hidden behind a Google share shortlink.", useFor: "Open once, note the real repo, then replace this card’s link.", skipWhen: "You need a known, verified resource immediately.", link: "https://share.google/T77FNIgWFFi8C8WUJ", sourceNote: "WhatsApp share link — verify destination.", installHint: null, cursorHow: "Open the share link, identify the repo, then ask Cursor how to use that specific project." },
+      { id: "skills-addy", name: "skills.addy.ie", category: "skill", tags: ["skill-registry","agent"], summary: "Skill discovery hub for coding agents.", useFor: "Browse skills by workflow when you do not know the exact package name.", skipWhen: "You already know the skill name and install command.", link: "https://skills.addy.ie/", sourceNote: null, installHint: null, cursorHow: "Browse in browser, copy an install command, run it in the project terminal, then ask Cursor Agent to follow that skill." },
+      { id: "mattpocock-skills", name: "Matt Pocock Skills", category: "skill", tags: ["engineering","workflow"], summary: "Practical engineering skill set for real agent workflows.", useFor: "Structured flows: grill, TDD, architecture, spec-to-implement.", skipWhen: "The task is tiny and a direct prompt is faster.", link: "https://github.com/mattpocock/skills", sourceNote: "Also covered dump share xLJq9CkfeiniOsI9u (deduped).", installHint: "npx skills@latest add mattpocock/skills", cursorHow: "Run install, then in Cursor Agent use the skill commands (e.g. grill / TDD / implement) for non-trivial work." },
+      { id: "agent-reach", name: "agent-reach", category: "tool", tags: ["agent","github"], summary: "Open-source project for agent reach / orchestration experiments.", useFor: "Explore agent interaction ideas beyond a single Cursor chat.", skipWhen: "A simple local script already solves the job.", link: "https://github.com/Panniantong/agent-reach", sourceNote: null, installHint: null, cursorHow: "Clone/read the repo README; ask Cursor to evaluate fit and wire only if this project needs multi-agent reach." },
+      { id: "spec-kit", name: "Spec Kit", category: "tool", tags: ["spec","planning"], summary: "GitHub’s spec-first toolkit for turning ideas into buildable specs.", useFor: "Fuzzy requirements that need a concrete implementation spec first.", skipWhen: "You already have a clear small ticket.", link: "https://github.com/github/spec-kit", sourceNote: null, installHint: null, cursorHow: "Follow the Spec Kit README in this repo; ask Cursor to run its setup and produce a spec before coding." },
+      { id: "one-skill-to-rule", name: "One Skill to Rule Them All", category: "skill", tags: ["meta-skill","agent"], summary: "Meta skill pack for standardizing agent behavior.", useFor: "One shared behavior layer across recurring agent tasks.", skipWhen: "You need a narrow, task-specific skill instead.", link: "https://github.com/rebelytics/one-skill-to-rule-them-all", sourceNote: null, installHint: null, cursorHow: "Install per repo README into Cursor skills, then ask the agent to follow that meta skill as default behavior." },
+      { id: "headroom", name: "Headroom", category: "tool", tags: ["ai","workflow"], summary: "AI developer workflow project for reducing repetitive setup.", useFor: "Try when setup/boilerplate friction keeps slowing you down.", skipWhen: "A short markdown checklist is enough.", link: "https://github.com/headroomlabs-ai/headroom", sourceNote: null, installHint: null, cursorHow: "Read docs with Cursor; install only if this repo's setup friction matches what Headroom solves." },
+      { id: "npxskillui", name: "npxskillui", category: "tool", tags: ["skills","ui"], summary: "UI helper around discovering and using agent skills.", useFor: "Prefer a visual path over hunting skills in the terminal.", skipWhen: "CLI-only skill install is already comfortable.", link: "https://github.com/amaancoderx/npxskillui", sourceNote: null, installHint: null, cursorHow: "Run via npx per README when browsing skills; then install chosen skills into this Cursor project." },
+      { id: "context7", name: "Context7", category: "tool", tags: ["context","docs"], summary: "Live library docs so agents get current API context.", useFor: "When the agent invents outdated APIs or generic library advice.", skipWhen: "The task is one file and the API is already obvious.", link: "https://context7.com/", sourceNote: null, installHint: null, cursorHow: "Add Context7 MCP/docs per their site for this stack; ask Cursor to pull live docs before coding against libraries." },
+      { id: "n8n", name: "n8n", category: "automation", tags: ["automation","workflow","integrations"], summary: "Open-source workflow automation for apps and APIs.", useFor: "Scheduled jobs, webhooks, and multi-app integrations without custom glue code.", skipWhen: "A 20-line local script already covers it.", link: "https://n8n.io/", sourceNote: "Resolved from WhatsApp share UpUS4O8aYTx0H1taR.", installHint: null, cursorHow: "Build workflows in the n8n UI; ask Cursor to write webhook payloads or scripts that n8n calls — not a Cursor skill." },
+      { id: "deploysafe", name: "DeploySafe", category: "security", tags: ["deploy","scan","live-url"], summary: "Live-URL security scanner with fix prompts for AI coding tools.", useFor: "Probe a deployed app for leaks, auth gaps, and common web risks before release.", skipWhen: "Nothing is deployed yet or you are not doing a security check.", link: "https://deploysafe.io/", sourceNote: "Resolved from WhatsApp share KwwaNA6lqe8NBlqz2.", installHint: null, cursorHow: "Scan the live URL in the browser, copy fix prompts into Cursor Agent, apply patches in this repo." },
+      { id: "uiux-promax", name: "UI UX Pro Max", category: "skill", tags: ["ui","ux","design-system"], summary: "Design-intelligence skill: styles, palettes, fonts, and UX rules for agents.", useFor: "Pick a concrete visual direction for landings and dashboards fast.", skipWhen: "The product already has a locked design system.", link: "https://github.com/nextlevelbuilder/ui-ux-pro-max-skill", sourceNote: "Resolved from WhatsApp share OeUb52ms4C3P5EIaz.", installHint: "npx skills add nextlevelbuilder/ui-ux-pro-max-skill", cursorHow: "Install the skill, then ask Cursor to generate a design system / restyle UI using UI UX Pro Max." },
+      { id: "taste-skill", name: "Taste Skill", category: "skill", tags: ["ui","anti-slop"], summary: "Anti-generic frontend skill that pushes unique visual taste.", useFor: "UI that should not look like default AI purple/cream layouts.", skipWhen: "Plain internal CRUD UI and speed matter more than polish.", link: "https://github.com/Leonxlnx/taste-skill", sourceNote: "Resolved from WhatsApp share XXwv7Iwm7XMBInKCB.", installHint: "npx skills add https://github.com/Leonxlnx/taste-skill --skill \"design-taste-frontend\"", cursorHow: "Install design-taste-frontend, then ask Cursor Agent to restyle this UI with strong taste (not default AI look)." },
+      { id: "motion-principles", name: "Design Motion Principles", category: "skill", tags: ["motion","animation"], summary: "Two-mode motion skill: build or audit interaction animation.", useFor: "Polish motion on cards/modals, or audit existing animation quality.", skipWhen: "Static data page with no meaningful interactions.", link: "https://github.com/kylezantos/design-motion-principles", sourceNote: "Resolved from WhatsApp share SNmfERCwwwPz8537l.", installHint: "npx skills add kylezantos/design-motion-principles", cursorHow: "Install the skill; ask Cursor to add or audit motion on interactive UI using build/audit modes." },
+      { id: "vercel-guidelines", name: "Web Interface Guidelines", category: "guideline", tags: ["accessibility","ux","vercel"], summary: "Vercel’s practical UI/UX quality checklist for web interfaces.", useFor: "Quality pass on focus, forms, loading, a11y, and performance.", skipWhen: "You only need a rough prototype and will refine later.", link: "https://vercel.com/design/guidelines", sourceNote: "Resolved from WhatsApp share pp9dGV7WGYQwPQe6N.", installHint: "npx skills add https://github.com/vercel-labs/agent-skills --skill web-design-guidelines", cursorHow: "Install the skill or paste the guidelines link; ask Cursor to audit this UI against Web Interface Guidelines." },
+      { id: "awesome-design-skills", name: "Awesome Design Skills", category: "skill", tags: ["design-system","registry"], summary: "Large registry of design-related agent skills.", useFor: "Browse many visual directions and pull one style skill quickly.", skipWhen: "You tend to over-switch styles mid-project.", link: "https://github.com/bergside/awesome-design-skills", sourceNote: "Resolved from WhatsApp share 2wFcc0B9KGdN2S4nl.", installHint: "npx typeui.sh list", cursorHow: "Browse the registry, install one style skill into Cursor, then ask the agent to apply only that style." },
+      { id: "github-share-2", name: "GitHub share (unresolved 2)", category: "platform", tags: ["github","share-link"], summary: "GitHub destination still hidden behind a Google share shortlink.", useFor: "Open once, identify the repo, then reclassify as skill/tool.", skipWhen: "You need trusted docs immediately.", link: "https://share.google/YdddIJWq6LcwXGWA6", sourceNote: "WhatsApp share link — verify destination.", installHint: null, cursorHow: "Resolve the share link first; then ask Cursor for install steps for that repo." },
+      { id: "shadcn-skills-docs", name: "shadcn Skills / MCP Docs", category: "guideline", tags: ["shadcn","mcp"], summary: "Official shadcn docs for skills and MCP usage.", useFor: "Component-heavy UI with current shadcn patterns and MCP wiring.", skipWhen: "The project is not in the shadcn ecosystem.", link: "https://ui.shadcn.com/docs/skills", sourceNote: "Resolved from WhatsApp share c3QMe4dCeTkbRyKkp.", installHint: null, cursorHow: "Open docs; ask Cursor to set up shadcn skills/MCP and add components using current official patterns." },
+      { id: "google-aistudio", name: "Google AI Studio", category: "platform", tags: ["llm","google"], summary: "Google’s prompting and model playground.", useFor: "Quick model tests, prompt drafts, and API exploration.", skipWhen: "You need repo-aware coding actions inside Cursor.", link: "https://aistudio.google.com/", sourceNote: "Resolved from WhatsApp share YkgHKB7swboi8Up8B.", installHint: null, cursorHow: "Prototype prompts in AI Studio; paste winners into Cursor. Not an installable project skill." },
+      { id: "github-share-3", name: "GitHub share (unresolved 3)", category: "platform", tags: ["github","share-link"], summary: "GitHub destination still hidden behind a Google share shortlink.", useFor: "Open once to learn if it is a skill, tool, or reference repo.", skipWhen: "You only want already-verified tools.", link: "https://share.google/Nli1X76gIAYVnxrfR", sourceNote: "WhatsApp share link — verify destination.", installHint: null, cursorHow: "Open once, classify the destination, then use Cursor against that real repo." },
+      { id: "github-share-4", name: "GitHub share (unresolved 4)", category: "platform", tags: ["github","share-link"], summary: "GitHub destination still hidden behind a Google share shortlink.", useFor: "Open once, note the target repo, then update this card.", skipWhen: "You need known resources now.", link: "https://share.google/pymxLTznK11RDDRaP", sourceNote: "WhatsApp share link — verify destination.", installHint: null, cursorHow: "Resolve the shortlink before asking Cursor to install or integrate anything." },
+      { id: "animejs", name: "Anime.js", category: "tool", tags: ["animation","frontend"], summary: "Lightweight JS animation engine for the web.", useFor: "Custom interaction-heavy animations beyond plain CSS transitions.", skipWhen: "Simple UI state changes can stay in CSS.", link: "https://animejs.com/", sourceNote: "Resolved from WhatsApp share tuxRVbzRPKtYzKhR3.", installHint: "npm i animejs", cursorHow: "npm i animejs; ask Cursor to add targeted animations where CSS is not enough." },
+      { id: "motion-dev", name: "Motion (prev Framer Motion)", category: "tool", tags: ["react","animation"], summary: "Production motion library for React, JS, and Vue.", useFor: "Animated dashboards, modals, and layout transitions in React apps.", skipWhen: "Static HTML with tiny micro-interactions is enough.", link: "https://motion.dev/", sourceNote: "Resolved from WhatsApp share 5dpW2lcL4tdMoMMo9.", installHint: "npm i motion", cursorHow: "npm i motion in a React/Vue app; ask Cursor to wire layout/modal animations." },
+      { id: "kokonutui", name: "KokonutUI", category: "ui-kit", tags: ["react","tailwind","shadcn"], summary: "Open-source animated components and templates.", useFor: "Assemble landing/dashboard UI faster with ready components.", skipWhen: "You need a fully bespoke design language from scratch.", link: "https://kokonutui.com/", sourceNote: "Resolved from WhatsApp share d7Spx1Skfd3lhCBu1.", installHint: "npx shadcn@latest add @kokonutui/<component>", cursorHow: "In a shadcn/Tailwind React app, ask Cursor to add specific KokonutUI components via the install hint." },
+      { id: "bklit-ui", name: "Bklit UI", category: "ui-kit", tags: ["charts","data-viz"], summary: "Design-focused data visualization component collection.", useFor: "Dashboard charts that should look polished quickly.", skipWhen: "A basic charting library already covers the need.", link: "https://bklit.com/", sourceNote: "Resolved from WhatsApp share 9c1HdiA9XiobTxnIl.", installHint: null, cursorHow: "Open docs, pick chart components; ask Cursor to integrate them into this dashboard UI." },
+      { id: "playwright", name: "Playwright", category: "tool", tags: ["testing","e2e"], summary: "End-to-end browser testing framework.", useFor: "Regression tests for forms, auth flows, and dashboard actions.", skipWhen: "A one-off manual check is enough for a tiny prototype.", link: "https://playwright.dev/", sourceNote: "Resolved from WhatsApp share i6frr0oFiIxYvsQKR.", installHint: "npm init playwright@latest", cursorHow: "Init Playwright in the repo; ask Cursor to write e2e tests for critical user flows." },
+      { id: "google-labs", name: "Google Labs", category: "platform", tags: ["google","experiments"], summary: "Google’s hub for public AI experiments and early products.", useFor: "Try new AI tools before they land in mainstream products.", skipWhen: "You need only stable, long-term production APIs.", link: "https://labs.google/", sourceNote: "Resolved from WhatsApp share JUe84GWqF9YMXXd5H.", installHint: null, cursorHow: "Explore in browser; bring useful experiments back as ideas for Cursor — not a project install." },
+      { id: "stitch", name: "Stitch (Google)", category: "platform", tags: ["design","ui","google-labs"], summary: "Google Labs AI canvas for generating UI designs and prototypes.", useFor: "Prompt-to-UI mockups and early design systems before coding.", skipWhen: "You already know the layout and will hand-write the frontend.", link: "https://stitch.withgoogle.com/", sourceNote: "Resolved from WhatsApp share 7rZycCZMGQHEjjs2D.", installHint: null, cursorHow: "Design screens in Stitch, export/describe them, ask Cursor to implement matching UI in this repo." },
+      { id: "opal", name: "Opal (Google)", category: "platform", tags: ["ai","no-code","google-labs"], summary: "Google Labs no-code builder for AI mini-apps and prompt workflows.", useFor: "Prototype multi-step AI mini-apps without writing a backend.", skipWhen: "You need a real app in your own repo/stack.", link: "https://opal.google/", sourceNote: "Resolved from WhatsApp share jt8jH4vCczm7Hgrkp.", installHint: null, cursorHow: "Prototype flows in Opal; if you graduate to code, ask Cursor to rebuild the flow in this stack." },
+      { id: "google-gemini", name: "Google Gemini", category: "platform", tags: ["llm","google"], summary: "Gemini model ecosystem and assistant.", useFor: "Model comparison, prompting, and multimodal experiments.", skipWhen: "You only need repo-local help inside Cursor.", link: "https://gemini.google.com/", sourceNote: "Resolved from WhatsApp share tEcv6sGY3uQjZ6aTS.", installHint: null, cursorHow: "Use in browser for side experiments; keep repo coding in Cursor unless you need Gemini API wiring." },
+      { id: "google-labs-share-2", name: "Google Labs share (unresolved)", category: "platform", tags: ["google","experiments","share-link"], summary: "Second Labs shortlink from the dump; may be a specific experiment.", useFor: "Open once to identify the exact Labs experiment, then rename this card.", skipWhen: "The Labs hub already covers what you need.", link: "https://share.google/uEVpC4vF7cnMJxIa2", sourceNote: "WhatsApp share link — verify destination.", installHint: null, cursorHow: "Open the share link to identify the experiment; then decide if Cursor needs any follow-up." },
+      { id: "i-have-adhd", name: "i-have-adhd Skill", category: "skill", tags: ["productivity","output-style"], summary: "Skill that keeps agent output concise and action-first.", useFor: "Answers you can scan fast while building or debugging.", skipWhen: "You specifically want long-form exploratory discussion.", link: "https://github.com/ayghri/i-have-adhd", sourceNote: null, installHint: "npx skills add ayghri/i-have-adhd", cursorHow: "Install the skill in this project so Cursor Agent replies stay short and action-first." },
+      { id: "jules", name: "Jules (Google)", category: "platform", tags: ["google","agent"], summary: "Google’s asynchronous coding agent platform.", useFor: "Compare an alternate coding-agent workflow against Cursor.", skipWhen: "Your Cursor setup already covers the full flow.", link: "https://jules.google/", sourceNote: null, installHint: null, cursorHow: "Use Jules in browser for async jobs; keep day-to-day repo work in Cursor unless comparing agents." }
     ];
 
     const categories = [
@@ -375,7 +480,8 @@
         entry.link,
         ...(entry.tags || []),
         entry.sourceNote || "",
-        entry.installHint || ""
+        entry.installHint || "",
+        entry.cursorHow || ""
       ].join(" ").toLowerCase();
       return hay.includes(needle);
     }
@@ -397,13 +503,15 @@
         return;
       }
 
-      filtered.forEach((entry) => {
+      filtered.forEach((entry, index) => {
         const card = document.createElement("article");
         card.className = "card";
+        card.style.animationDelay = Math.min(index, 16) * 35 + "ms";
 
         const tags = (entry.tags || []).map((t) => "<span class=\"tag\">" + escapeHtml(t) + "</span>").join("");
         const note = entry.sourceNote ? "<p class=\"note\"><span class=\"label\">Note:</span>" + escapeHtml(entry.sourceNote) + "</p>" : "";
         const install = entry.installHint ? "<p class=\"line\"><span class=\"label\">Install:</span><code>" + escapeHtml(entry.installHint) + "</code></p>" : "";
+        const how = entry.cursorHow ? "<p class=\"line\"><span class=\"label\">Cursor:</span>" + escapeHtml(entry.cursorHow) + "</p>" : "";
 
         card.innerHTML = ""
           + "<div class=\"top\">"
@@ -416,6 +524,7 @@
           + "<summary>More details</summary>"
           + "<p class=\"line\"><span class=\"label\">Skip when:</span>" + escapeHtml(entry.skipWhen) + "</p>"
           + install
+          + how
           + note
           + "<div class=\"tags\">" + tags + "</div>"
           + "</details>"
@@ -437,11 +546,47 @@
       return String(value).replace(/"/g, "&quot;");
     }
 
+    const PROJECT_PROMPT = `You are helping me set up THIS Cursor project using my personal MyGoTo catalog.
+
+Catalog (live): https://saffinxavier.github.io/mygoto/
+Fallback: https://github.com/saffinxavier/mygoto (open index.html) or local MyGoTo repo.
+
+Do this:
+1. Inspect this repo (README, package manifests, scripts, main folders, stack).
+2. From the MyGoTo catalog, recommend ONLY 3–7 items that fit THIS project. Do not dump the whole catalog.
+3. For each pick, give: name, category, why it fits here, exact Cursor how-to (from the card’s Cursor / Install fields), and when to skip.
+4. Prefer: skills for agent workflow, tools/ui-kits for code deps, guidelines for UI audits. Skip unrelated platforms.
+5. End with a short install order I can run in the terminal / Cursor Agent.
+
+Keep answers short and action-first.`;
+
+    const copyPromptBtn = document.getElementById("copy-prompt");
+    copyPromptBtn.addEventListener("click", async () => {
+      try {
+        await navigator.clipboard.writeText(PROJECT_PROMPT);
+        copyPromptBtn.textContent = "Copied";
+        copyPromptBtn.classList.add("is-done");
+        setTimeout(() => {
+          copyPromptBtn.textContent = "Copy project prompt";
+          copyPromptBtn.classList.remove("is-done");
+        }, 1600);
+      } catch (err) {
+        copyPromptBtn.textContent = "Copy failed";
+      }
+    });
+
     searchInput.addEventListener("input", (event) => {
       state.q = event.target.value;
       writeHash();
       renderCards();
     });
+
+    const headerEl = document.getElementById("header");
+    function syncStuck() {
+      headerEl.classList.toggle("is-stuck", window.scrollY > 8);
+    }
+    window.addEventListener("scroll", syncStuck, { passive: true });
+    syncStuck();
 
     parseHash();
     searchInput.value = state.q;

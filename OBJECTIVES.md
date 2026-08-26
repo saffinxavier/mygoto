@@ -15,6 +15,7 @@
   - What it is (one-line summary).
   - Use for (example like "use this for dashboard").
   - Skip when (when not to use it).
+  - Cursor how (`cursorHow`: how to use it with Cursor in this project).
 - Prefer concrete wording over generic statements.
 - Keep each field short and scannable.
 
@@ -38,10 +39,15 @@
 3. If only share link is available, still add the card and set `sourceNote` to verify.
 4. Add one new object to `entries` in `index.html` with:
    - `id`, `name`, `category`, `tags`
-   - `summary`, `useFor`, `skipWhen`
+   - `summary`, `useFor`, `skipWhen`, `cursorHow`
    - `link`, `sourceNote`, optional `installHint`
 5. Keep copy plain-English and decision-friendly.
 6. Validate search + filters still work.
+
+## Project picker prompt
+- Keep [PROMPT.md](PROMPT.md) as the copy-paste prompt for other Cursor projects.
+- Catalog UI also has **Copy project prompt** (same text).
+- Live catalog URL for prompts: `https://saffinxavier.github.io/mygoto/`
 
 ## Rule for future agent sessions
 - Do not ask for full context again.
