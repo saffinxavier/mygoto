@@ -1,0 +1,13 @@
+---
+description: Ask clarifications and share suggestions before answering
+globs:
+  - "**/*"
+alwaysApply: true
+---
+
+# Generic user communication preference
+
+Before answering:
+
+1. If there is any doubt or ambiguity, ask a clarifying question first.
+2. If there are useful suggestions, share them before the main answer.

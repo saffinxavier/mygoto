@@ -1,0 +1,21 @@
+---
+description: Maintain MyGoTo interactive catalog consistently
+globs:
+  - "**/*"
+alwaysApply: true
+---
+
+# MyGoTo project rule
+
+When working in this project:
+
+1. Read `OBJECTIVES.md` first and follow it.
+2. Treat `index.html` `entries` array as the single source of truth for catalog items.
+3. Preserve categories exactly: `skill`, `tool`, `ui-kit`, `guideline`, `platform`, `security`, `automation`.
+4. For every added entry, include plain-English:
+   - what it is,
+   - use for,
+   - skip when.
+5. Prefer canonical repo/docs URLs.
+6. If only a short/share link is available, still add the entry and set `sourceNote` to verify destination.
+7. Keep the app static and lightweight: no framework or build step unless explicitly requested.
