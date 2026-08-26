@@ -1,0 +1,17 @@
+# Installed agent skills (restore via skills-lock.json)
+.agents/skills/
+
+# OS
+Thumbs.db
+Desktop.ini
+.DS_Store
+
+# Env / secrets
+.env
+.env.*
+!.env.example
+
+# Logs & caches
+*.log
+.cache/
+node_modules/

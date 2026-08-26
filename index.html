@@ -3,6 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#0a0a0a">
   <title>MyGoTo</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -18,9 +19,22 @@
       --accent: #ffe600;
       --danger: #ff4d4d;
       --hard: 4px 4px 0 #000;
+      --cat-skill: #ffe600;
+      --cat-tool: #5ad4ff;
+      --cat-ui-kit: #ff8a3d;
+      --cat-guideline: #7dffb3;
+      --cat-platform: #c9a0ff;
+      --cat-security: #ff4d4d;
+      --cat-automation: #ff7ad9;
+      --header-offset: 12rem;
+      --page-pad-x: clamp(12px, 2vw, 28px);
     }
 
     * { box-sizing: border-box; }
+
+    html {
+      scroll-padding-top: var(--header-offset);
+    }
 
     body {
       margin: 0;
@@ -33,12 +47,16 @@
         linear-gradient(90deg, var(--line) 1px, transparent 1px);
       background-size: 28px 28px;
       background-attachment: fixed;
+      touch-action: manipulation;
+      -webkit-tap-highlight-color: transparent;
+      overflow-x: hidden;
     }
 
     .container {
-      max-width: 1120px;
+      width: 100%;
+      max-width: 1680px;
       margin: 0 auto;
-      padding: 20px 16px 48px;
+      padding: max(16px, env(safe-area-inset-top)) max(var(--page-pad-x), env(safe-area-inset-right)) max(48px, env(safe-area-inset-bottom)) max(var(--page-pad-x), env(safe-area-inset-left));
     }
 
     .skip-link {
@@ -55,30 +73,55 @@
     }
     .skip-link:focus { top: 8px; }
 
-    .header {
+    .header-shell {
+      margin-bottom: clamp(14px, 2vw, 18px);
+    }
+
+    .masthead,
+    .toolbar {
       background: var(--panel);
       border: 2px solid var(--text);
       box-shadow: var(--hard);
-      padding: 18px 16px 16px;
-      margin-bottom: 18px;
+    }
+
+    .masthead {
+      padding: clamp(12px, 1.6vw, 18px) clamp(12px, 1.5vw, 16px);
+    }
+
+    .toolbar {
+      padding: clamp(10px, 1.4vw, 16px) clamp(12px, 1.5vw, 16px);
       position: sticky;
       top: 0;
       z-index: 10;
       transition: border-color 80ms linear, box-shadow 80ms linear;
     }
-    .header.is-stuck {
+    .toolbar.is-stuck {
       border-color: var(--accent);
       box-shadow: 4px 4px 0 var(--accent);
+    }
+
+    .header-top {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 10px 16px;
+    }
+
+    .brand-block {
+      min-width: 0;
+      flex: 1 1 auto;
     }
 
     .brand {
       margin: 0;
       font-family: Syne, sans-serif;
       font-weight: 800;
-      font-size: clamp(2.4rem, 8vw, 4.2rem);
-      line-height: 0.92;
+      font-size: clamp(2rem, 5.5vw, 3.6rem);
+      line-height: 0.95;
       letter-spacing: -0.04em;
       text-transform: uppercase;
+      text-wrap: balance;
+      min-width: 0;
     }
     .brand span {
       display: inline-block;
@@ -89,12 +132,51 @@
     }
 
     .sub {
-      margin: 10px 0 16px;
+      margin: 8px 0 0;
       color: var(--muted);
-      font-size: 0.82rem;
-      max-width: 42rem;
+      font-size: clamp(0.68rem, 1.4vw, 0.82rem);
+      max-width: 36rem;
       text-transform: uppercase;
       letter-spacing: 0.04em;
+      min-width: 0;
+    }
+
+    .copy-list-btn {
+      flex: 0 0 auto;
+      border: 2px solid var(--text);
+      background: #000;
+      color: var(--text);
+      border-radius: 0;
+      padding: 8px 12px;
+      font: inherit;
+      font-size: 0.68rem;
+      font-weight: 600;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+      cursor: pointer;
+      white-space: nowrap;
+      box-shadow: 3px 3px 0 var(--text);
+      min-height: 40px;
+      align-self: flex-start;
+    }
+    .copy-list-btn:hover {
+      background: #1a1a1a;
+      transform: translate(2px, 2px);
+      box-shadow: 1px 1px 0 var(--text);
+    }
+    .copy-list-btn:active {
+      transform: translate(2px, 2px) scale(0.98);
+    }
+    .copy-list-btn.is-done {
+      background: var(--accent);
+      color: #000;
+      border-color: #000;
+      box-shadow: 3px 3px 0 #000;
+    }
+
+    .masthead-actions {
+      display: none;
+      margin-top: 12px;
     }
 
     .search-wrap {
@@ -103,9 +185,11 @@
       gap: 8px;
       margin-bottom: 10px;
       align-items: stretch;
+      min-width: 0;
     }
 
-    .copy-prompt-btn {
+    .copy-prompt-btn,
+    .filter-btn {
       border: 2px solid #000;
       background: var(--accent);
       color: #000;
@@ -119,10 +203,36 @@
       cursor: pointer;
       white-space: nowrap;
       box-shadow: 3px 3px 0 #000;
+      min-height: 44px;
     }
-    .copy-prompt-btn:hover {
+    .filter-btn {
+      display: none;
+      background: #000;
+      color: var(--text);
+      border-color: var(--text);
+      box-shadow: 3px 3px 0 var(--text);
+      min-width: 5.5rem;
+    }
+    .filter-btn[aria-expanded="true"] {
+      background: var(--accent);
+      color: #000;
+      border-color: #000;
+      box-shadow: 3px 3px 0 #000;
+    }
+    .copy-prompt-btn:hover,
+    .filter-btn:hover {
       transform: translate(2px, 2px);
       box-shadow: 1px 1px 0 #000;
+    }
+    .filter-btn:hover {
+      box-shadow: 1px 1px 0 var(--text);
+    }
+    .filter-btn[aria-expanded="true"]:hover {
+      box-shadow: 1px 1px 0 #000;
+    }
+    .copy-prompt-btn:active,
+    .filter-btn:active {
+      transform: translate(2px, 2px) scale(0.98);
     }
     .copy-prompt-btn.is-done {
       background: #fff;
@@ -154,12 +264,14 @@
       margin: 0 0 10px;
       letter-spacing: 0.06em;
       text-transform: uppercase;
+      font-variant-numeric: tabular-nums;
     }
 
     .chips {
       display: flex;
       flex-wrap: wrap;
       gap: 8px;
+      max-width: 100%;
     }
 
     .chip {
@@ -169,12 +281,13 @@
       border-radius: 0;
       padding: 7px 12px;
       font: inherit;
-      font-size: 0.75rem;
+      font-size: clamp(0.68rem, 1.2vw, 0.75rem);
       font-weight: 500;
       letter-spacing: 0.04em;
       text-transform: uppercase;
       cursor: pointer;
       transition: none;
+      min-height: 40px;
     }
     .chip:hover { background: #1a1a1a; }
     .chip.active {
@@ -186,20 +299,44 @@
 
     .grid {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(270px, 1fr));
-      gap: 14px;
+      grid-template-columns: 1fr;
+      gap: clamp(12px, 1.4vw, 16px);
+      width: 100%;
+    }
+
+    /* phone landscape / small tablet: 2 */
+    @media (min-width: 640px) {
+      .grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    }
+    /* tablet: 3 */
+    @media (min-width: 900px) {
+      .grid { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+    }
+    /* desktop: 4, cards stretch with the wider shell */
+    @media (min-width: 1200px) {
+      .grid { grid-template-columns: repeat(4, minmax(0, 1fr)); }
     }
 
     .card {
       background: var(--panel);
       border: 2px solid var(--text);
-      border-left: 6px solid var(--text);
+      border-left: 6px solid var(--cat, var(--text));
       border-radius: 0;
       padding: 14px;
       box-shadow: var(--hard);
+      min-width: 0;
+    }
+    .card--enter {
       animation: cardIn 280ms steps(4, end) both;
     }
     .card:hover { border-left-color: var(--accent); }
+    .card[data-cat="skill"] { --cat: var(--cat-skill); }
+    .card[data-cat="tool"] { --cat: var(--cat-tool); }
+    .card[data-cat="ui-kit"] { --cat: var(--cat-ui-kit); }
+    .card[data-cat="guideline"] { --cat: var(--cat-guideline); }
+    .card[data-cat="platform"] { --cat: var(--cat-platform); }
+    .card[data-cat="security"] { --cat: var(--cat-security); }
+    .card[data-cat="automation"] { --cat: var(--cat-automation); }
 
     @keyframes cardIn {
       from { opacity: 0; transform: translateY(10px); }
@@ -222,6 +359,9 @@
       font-size: 1.15rem;
       letter-spacing: -0.02em;
       line-height: 1.15;
+      text-wrap: balance;
+      min-width: 0;
+      overflow-wrap: anywhere;
     }
 
     .badge {
@@ -343,30 +483,145 @@
         animation: none !important;
         transition: none !important;
       }
+      .copy-prompt-btn:hover,
+      .filter-btn:hover,
+      .copy-list-btn:hover,
       .link-btn:hover {
         transform: none;
         box-shadow: 3px 3px 0 #000;
       }
+      .filter-btn:hover { box-shadow: 3px 3px 0 var(--text); }
+      .copy-list-btn:hover { box-shadow: 3px 3px 0 var(--text); }
+      .filter-btn[aria-expanded="true"]:hover,
+      .copy-list-btn.is-done:hover { box-shadow: 3px 3px 0 #000; }
+      .copy-prompt-btn:active,
+      .filter-btn:active,
+      .copy-list-btn:active {
+        transform: none;
+      }
     }
 
-    @media (max-width: 600px) {
-      .brand { font-size: 2.35rem; }
-      .header { top: 0; }
+    /* Desktop / tablet: one sticky chrome block */
+    @media (min-width: 768px) {
+      .header-shell {
+        position: sticky;
+        top: 0;
+        z-index: 10;
+        background: var(--panel);
+        border: 2px solid var(--text);
+        box-shadow: var(--hard);
+        padding: clamp(12px, 1.6vw, 18px) clamp(12px, 1.5vw, 16px) clamp(12px, 1.4vw, 16px);
+        transition: border-color 80ms linear, box-shadow 80ms linear;
+      }
+      .header-shell.is-stuck {
+        border-color: var(--accent);
+        box-shadow: 4px 4px 0 var(--accent);
+      }
+      .masthead,
+      .toolbar {
+        background: transparent;
+        border: 0;
+        box-shadow: none;
+        padding: 0;
+        position: static;
+      }
+      .masthead { margin-bottom: clamp(10px, 1.5vw, 14px); }
+      .toolbar { margin: 0; }
+      .toolbar.is-stuck {
+        border-color: transparent;
+        box-shadow: none;
+      }
+      .search-wrap { margin-bottom: 10px; }
+    }
+
+    /* Mobile: masthead scrolls away; sticky = search + optional filters */
+    @media (max-width: 767px) {
+      .masthead {
+        margin-bottom: 10px;
+        padding: 12px;
+      }
+      .header-top {
+        gap: 8px 10px;
+      }
+      .brand { font-size: 1.85rem; }
+      .sub {
+        width: 100%;
+        max-width: none;
+        margin-top: 6px;
+        font-size: 0.68rem;
+        line-height: 1.35;
+      }
+      .copy-list-btn {
+        padding: 7px 10px;
+        font-size: 0.62rem;
+        min-height: 36px;
+      }
+      .masthead-actions { display: block; }
+      .masthead-actions .copy-prompt-btn {
+        width: 100%;
+        white-space: normal;
+      }
+      .toolbar {
+        padding: 8px 10px;
+        margin-bottom: 0;
+      }
+      .search-wrap {
+        grid-template-columns: 1fr auto;
+        margin-bottom: 0;
+      }
+      .search-wrap .copy-prompt-btn { display: none; }
+      .filter-btn { display: inline-flex; align-items: center; justify-content: center; }
+      input[type="search"] {
+        padding: 10px 12px;
+        font-size: 1rem; /* avoid iOS zoom */
+      }
+      .stats {
+        margin: 8px 0 0;
+        font-size: 0.68rem;
+      }
+      .chips {
+        display: none;
+        margin-top: 8px;
+        padding-top: 8px;
+        border-top: 2px solid var(--line);
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 8px;
+      }
+      .toolbar.is-filters-open .chips { display: grid; }
+      .chip {
+        width: 100%;
+        text-align: center;
+        min-height: 40px;
+        padding: 8px 10px;
+      }
     }
   </style>
 </head>
 <body>
   <a class="skip-link" href="#catalog">Skip to catalog</a>
   <div class="container">
-    <header class="header" id="header">
-      <h1 class="brand">My<span>GoTo</span></h1>
-      <p class="sub">Skills · tools · UI kits · platforms — plain English, pick fast.</p>
-      <div class="search-wrap">
-        <input id="search" type="search" placeholder="Search name, use case, tag, source..." aria-label="Search catalog">
-        <button type="button" class="copy-prompt-btn" id="copy-prompt" aria-label="Copy project picker prompt">Copy project prompt</button>
+    <header class="header-shell" id="header">
+      <div class="masthead">
+        <div class="header-top">
+          <div class="brand-block">
+            <h1 class="brand">My<span>GoTo</span></h1>
+            <p class="sub">Skills · tools · UI kits · platforms. Plain English, pick fast.</p>
+          </div>
+          <button type="button" class="copy-list-btn" id="copy-list" aria-label="Copy all catalog names and links">Copy list</button>
+        </div>
+        <div class="masthead-actions">
+          <button type="button" class="copy-prompt-btn" id="copy-prompt-mobile" aria-label="Copy project picker prompt">Copy project prompt</button>
+        </div>
       </div>
-      <p id="stats" class="stats" aria-live="polite"></p>
-      <div class="chips" id="chips" role="toolbar" aria-label="Category filters"></div>
+      <div class="toolbar" id="toolbar">
+        <div class="search-wrap">
+          <input id="search" type="search" name="q" autocomplete="off" spellcheck="false" placeholder="Search name, use case, tag, source…" aria-label="Search catalog">
+          <button type="button" class="copy-prompt-btn" id="copy-prompt" aria-label="Copy project picker prompt">Copy project prompt</button>
+          <button type="button" class="filter-btn" id="filter-btn" aria-controls="chips" aria-expanded="false">Filters</button>
+        </div>
+        <p id="stats" class="stats" aria-live="polite"></p>
+        <div class="chips" id="chips" role="toolbar" aria-label="Category filters"></div>
+      </div>
     </header>
     <main id="catalog" class="grid" aria-label="Catalog cards"></main>
   </div>
@@ -426,6 +681,7 @@
       q: "",
       cat: "all"
     };
+    let firstPaint = true;
 
     const searchInput = document.getElementById("search");
     const chipsEl = document.getElementById("chips");
@@ -463,6 +719,11 @@
           writeHash();
           createChips();
           renderCards();
+          if (window.matchMedia("(max-width: 767px)").matches) {
+            document.getElementById("toolbar").classList.remove("is-filters-open");
+          }
+          if (typeof syncFilterLabel === "function") syncFilterLabel();
+          if (typeof syncHeaderOffset === "function") syncHeaderOffset();
         });
         chipsEl.appendChild(btn);
       });
@@ -505,13 +766,17 @@
 
       filtered.forEach((entry, index) => {
         const card = document.createElement("article");
-        card.className = "card";
-        card.style.animationDelay = Math.min(index, 16) * 35 + "ms";
+        card.className = "card" + (firstPaint ? " card--enter" : "");
+        card.dataset.cat = entry.category;
+        if (firstPaint) {
+          card.style.animationDelay = Math.min(index, 16) * 35 + "ms";
+        }
 
         const tags = (entry.tags || []).map((t) => "<span class=\"tag\">" + escapeHtml(t) + "</span>").join("");
         const note = entry.sourceNote ? "<p class=\"note\"><span class=\"label\">Note:</span>" + escapeHtml(entry.sourceNote) + "</p>" : "";
         const install = entry.installHint ? "<p class=\"line\"><span class=\"label\">Install:</span><code>" + escapeHtml(entry.installHint) + "</code></p>" : "";
         const how = entry.cursorHow ? "<p class=\"line\"><span class=\"label\">Cursor:</span>" + escapeHtml(entry.cursorHow) + "</p>" : "";
+        const openLabel = "Open " + entry.name + " (opens in new tab)";
 
         card.innerHTML = ""
           + "<div class=\"top\">"
@@ -529,10 +794,12 @@
           + "<div class=\"tags\">" + tags + "</div>"
           + "</details>"
           + "<div class=\"actions\">"
-          + "<a class=\"link-btn\" href=\"" + escapeAttr(entry.link) + "\" target=\"_blank\" rel=\"noopener noreferrer\">Open link</a>"
+          + "<a class=\"link-btn\" href=\"" + escapeAttr(entry.link) + "\" target=\"_blank\" rel=\"noopener noreferrer\" aria-label=\"" + escapeAttr(openLabel) + "\">Open ↗</a>"
           + "</div>";
         catalogEl.appendChild(card);
       });
+
+      firstPaint = false;
     }
 
     function escapeHtml(value) {
@@ -560,18 +827,48 @@ Do this:
 
 Keep answers short and action-first.`;
 
-    const copyPromptBtn = document.getElementById("copy-prompt");
-    copyPromptBtn.addEventListener("click", async () => {
+    const copyButtons = [
+      document.getElementById("copy-prompt"),
+      document.getElementById("copy-prompt-mobile")
+    ].filter(Boolean);
+
+    async function copyProjectPrompt(btn) {
       try {
         await navigator.clipboard.writeText(PROJECT_PROMPT);
-        copyPromptBtn.textContent = "Copied";
-        copyPromptBtn.classList.add("is-done");
+        copyButtons.forEach((el) => {
+          el.textContent = "Copied";
+          el.classList.add("is-done");
+        });
         setTimeout(() => {
-          copyPromptBtn.textContent = "Copy project prompt";
-          copyPromptBtn.classList.remove("is-done");
+          copyButtons.forEach((el) => {
+            el.textContent = "Copy project prompt";
+            el.classList.remove("is-done");
+          });
         }, 1600);
       } catch (err) {
-        copyPromptBtn.textContent = "Copy failed";
+        btn.textContent = "Copy failed";
+      }
+    }
+    copyButtons.forEach((btn) => {
+      btn.addEventListener("click", () => copyProjectPrompt(btn));
+    });
+
+    function catalogNameLinkList() {
+      return entries.map((entry) => `${entry.name}\n${entry.link}`).join("\n\n");
+    }
+
+    const copyListBtn = document.getElementById("copy-list");
+    copyListBtn.addEventListener("click", async () => {
+      try {
+        await navigator.clipboard.writeText(catalogNameLinkList());
+        copyListBtn.textContent = "Copied";
+        copyListBtn.classList.add("is-done");
+        setTimeout(() => {
+          copyListBtn.textContent = "Copy list";
+          copyListBtn.classList.remove("is-done");
+        }, 1600);
+      } catch (err) {
+        copyListBtn.textContent = "Copy failed";
       }
     });
 
@@ -582,19 +879,69 @@ Keep answers short and action-first.`;
     });
 
     const headerEl = document.getElementById("header");
+    const toolbarEl = document.getElementById("toolbar");
+    const filterBtn = document.getElementById("filter-btn");
+    const mobileMq = window.matchMedia("(max-width: 767px)");
+
+    function stickyEl() {
+      return mobileMq.matches ? toolbarEl : headerEl;
+    }
+
+    function syncFilterLabel() {
+      if (!filterBtn) return;
+      const open = toolbarEl.classList.contains("is-filters-open");
+      const catLabel = categories.find(([id]) => id === state.cat)?.[1] || "All";
+      filterBtn.textContent = open ? "Close" : (state.cat === "all" ? "Filters" : catLabel);
+      filterBtn.setAttribute("aria-expanded", open ? "true" : "false");
+    }
+
+    filterBtn.addEventListener("click", () => {
+      toolbarEl.classList.toggle("is-filters-open");
+      syncFilterLabel();
+      syncHeaderOffset();
+    });
+
+    function syncHeaderOffset() {
+      const el = stickyEl();
+      document.documentElement.style.setProperty(
+        "--header-offset",
+        `${Math.ceil(el.getBoundingClientRect().height) + 12}px`
+      );
+    }
     function syncStuck() {
-      headerEl.classList.toggle("is-stuck", window.scrollY > 8);
+      const stuck = window.scrollY > 8;
+      headerEl.classList.toggle("is-stuck", stuck && !mobileMq.matches);
+      toolbarEl.classList.toggle("is-stuck", stuck && mobileMq.matches);
+    }
+    function onViewportChange() {
+      if (!mobileMq.matches) {
+        toolbarEl.classList.remove("is-filters-open");
+      }
+      syncFilterLabel();
+      syncStuck();
+      syncHeaderOffset();
     }
     window.addEventListener("scroll", syncStuck, { passive: true });
+    if (mobileMq.addEventListener) mobileMq.addEventListener("change", onViewportChange);
+    else mobileMq.addListener(onViewportChange);
     syncStuck();
+    syncFilterLabel();
+    syncHeaderOffset();
+    if (typeof ResizeObserver !== "undefined") {
+      new ResizeObserver(syncHeaderOffset).observe(toolbarEl);
+      new ResizeObserver(syncHeaderOffset).observe(headerEl);
+    } else {
+      window.addEventListener("resize", syncHeaderOffset, { passive: true });
+    }
 
     parseHash();
     searchInput.value = state.q;
     createChips();
     renderCards();
+    syncFilterLabel();
+    syncHeaderOffset();
 
-    const isDesktop = window.matchMedia("(min-width: 768px)").matches;
-    if (isDesktop) searchInput.focus();
+    if (!mobileMq.matches) searchInput.focus();
   </script>
 </body>
 </html>
