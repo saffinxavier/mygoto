@@ -44,9 +44,14 @@
 5. Keep copy plain-English and decision-friendly.
 6. Validate search + filters still work.
 
+## Prune + evaluate workflow (batch of new candidates)
+- Use [CATALOG-CURATION.md](CATALOG-CURATION.md): review existing entries, remove weak/redundant ones, evaluate candidates, add only high-quality keepers.
+- Prefer quality and long-term value over growing the list.
+
 ## Project picker prompt
 - Keep [PROMPT.md](PROMPT.md) as the copy-paste prompt for other Cursor projects.
 - Catalog UI also has **Copy project prompt** (same text).
+- Each card has **Copy prompt** for a single-item Cursor paste (that entry only, not the whole catalog).
 - Live catalog URL for prompts: `https://saffinxavier.github.io/mygoto/`
 
 ## Rule for future agent sessions
