@@ -5,13 +5,13 @@ Use this when you have new links to consider — not for picking tools in anothe
 
 **Live catalog:** https://saffinxavier.github.io/mygoto/  
 **Source of truth:** `index.html` → `entries` array  
-**Standing brief:** [OBJECTIVES.md](OBJECTIVES.md) and `.cursor/rules/my-goto.mdc`
+**Standing brief:** [OBJECTIVES.md](OBJECTIVES.md) and `AGENTS.md` (Codex) or `.cursor/rules/my-goto.mdc` (Cursor)
 
 ---
 
 ## How to use
 
-1. Open this MyGoTo repo in Cursor.
+1. Open this MyGoTo repo in Codex or Cursor.
 2. Copy the **Prompt** block below into chat.
 3. Paste your candidate URLs (and optionally note prune aggressiveness).
 4. Let the agent propose removes/adds; confirm before it edits if you want a review pass first.
@@ -21,11 +21,11 @@ Use this when you have new links to consider — not for picking tools in anothe
 ## Prompt
 
 ```text
-You are curating my personal MyGoTo catalog (Cursor go-to links).
+You are curating my personal MyGoTo catalog (Codex and Cursor go-to links).
 
 Read and follow:
 - OBJECTIVES.md
-- .cursor/rules/my-goto.mdc
+- AGENTS.md when using Codex, or .cursor/rules/my-goto.mdc when using Cursor
 
 Single source of truth: the `entries` array in index.html only.
 Do not create duplicate JSON/CSV copies. Keep the app static (no framework/build step).
@@ -39,10 +39,11 @@ When uncertain about an item, explain why it may or may not be worth keeping; do
 skill | tool | ui-kit | guideline | platform | security | automation
 
 ## Entry shape (every card)
-id, name, category, tags, summary, useFor, skipWhen, cursorHow, link, sourceNote, optional installHint
+id, name, category, tags, summary, useFor, skipWhen, codexHow, cursorHow, link, sourceNote, optional installHint and codexInstallHint
 - Plain English; short and scannable.
 - Prefer canonical repo/docs URLs.
 - If only a short/share link exists, still add and set sourceNote to verify destination.
+- Check assistant-specific setup. Set codexInstallHint to a Codex command when installHint is Cursor-only, or null when no Codex command is verified.
 
 ## Process
 
@@ -55,7 +56,7 @@ id, name, category, tags, summary, useFor, skipWhen, cursorHow, link, sourceNote
 ### 2. Evaluate new candidates
 Paste candidates below (URLs and/or names). For each:
 - What it is (1–2 sentences).
-- Usefulness, quality, relevance, durability for a Cursor go-to catalog.
+- Usefulness, quality, relevance, durability for a Codex and Cursor go-to catalog.
 - Verdict: ADD | SKIP | UNCERTAIN (with reason).
 - If ADD: category + note any overlap with an existing entry.
 - Do not add just because it was mentioned.
@@ -97,6 +98,6 @@ Useful patterns — not hard rules:
 - Hub pages when specific products are already cards → remove hub
 - Unofficial WhatsApp gateways → skip unless you live in that automation (ToS risk)
 - Niche GPU research OCR vs everyday PDF OCR → skip if Stirling (or similar) covers light use
-- Paid QA SaaS replaceable by Sentry/Playwright → skip for personal Cursor catalog
+- Paid QA SaaS replaceable by Sentry/Playwright → skip for this personal catalog
 - One-off marketing toys (e.g. launch video skills) → skip
 - DESIGN.md catalogs that overlap Taste / UI UX Pro Max / Awesome Design Skills → skip unless you actually use that CLI weekly

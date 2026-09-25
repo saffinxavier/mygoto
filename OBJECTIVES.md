@@ -1,7 +1,7 @@
 # MyGoTo Catalog Objective
 
 ## What this project is
-- Personal, click-to-open browser catalog for your Cursor go-to links.
+- Personal, click-to-open browser catalog for your Codex and Cursor go-to links.
 - Converts raw WhatsApp-style links into practical cards with plain-English guidance.
 - Built as a single-file app (`index.html`) with embedded data.
 
@@ -15,7 +15,9 @@
   - What it is (one-line summary).
   - Use for (example like "use this for dashboard").
   - Skip when (when not to use it).
+  - Codex how (`codexHow`: how to use it with Codex in this project).
   - Cursor how (`cursorHow`: how to use it with Cursor in this project).
+- Provide an assistant-specific `codexInstallHint` when the shared `installHint` is Cursor-only; use `null` if no Codex command is verified.
 - Prefer concrete wording over generic statements.
 - Keep each field short and scannable.
 
@@ -39,8 +41,8 @@
 3. If only share link is available, still add the card and set `sourceNote` to verify.
 4. Add one new object to `entries` in `index.html` with:
    - `id`, `name`, `category`, `tags`
-   - `summary`, `useFor`, `skipWhen`, `cursorHow`
-   - `link`, `sourceNote`, optional `installHint`
+   - `summary`, `useFor`, `skipWhen`, `codexHow`, `cursorHow`
+   - `link`, `sourceNote`, optional `installHint` and `codexInstallHint`
 5. Keep copy plain-English and decision-friendly.
 6. Validate search + filters still work.
 
@@ -49,11 +51,11 @@
 - Prefer quality and long-term value over growing the list.
 
 ## Project picker prompt
-- Keep [PROMPT.md](PROMPT.md) as the copy-paste prompt for other Cursor projects.
-- Catalog UI also has **Copy project prompt** (same text).
-- Each card has **Copy prompt** for a single-item Cursor paste (that entry only, not the whole catalog).
+- Keep [PROMPT.md](PROMPT.md) as the copy-paste prompts for other Codex and Cursor projects.
+- Catalog UI has a Codex/Cursor toggle; **Copy project prompt** matches the selected block in `PROMPT.md`.
+- Each card has **Copy prompt** for a single-item paste into the selected assistant (that entry only, not the whole catalog).
 - Live catalog URL for prompts: `https://saffinxavier.github.io/mygoto/`
 
 ## Rule for future agent sessions
 - Do not ask for full context again.
-- Use this objective file plus `.cursor/rules/my-goto.mdc` as the standing brief.
+- Use this objective file plus `AGENTS.md` (Codex) or `.cursor/rules/my-goto.mdc` (Cursor) as the standing brief.

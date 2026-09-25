@@ -141,6 +141,13 @@
       min-width: 0;
     }
 
+    .header-end {
+      display: flex;
+      flex: 0 0 auto;
+      align-items: flex-end;
+      gap: 10px;
+    }
+
     .copy-list-btn {
       flex: 0 0 auto;
       border: 2px solid var(--text);
@@ -157,7 +164,6 @@
       white-space: nowrap;
       box-shadow: 3px 3px 0 var(--text);
       min-height: 40px;
-      align-self: flex-start;
     }
     .copy-list-btn:hover {
       background: #1a1a1a;
@@ -186,6 +192,43 @@
       margin-bottom: 10px;
       align-items: stretch;
       min-width: 0;
+    }
+
+    .assistant-toggle {
+      display: flex;
+      flex: 0 0 auto;
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 4px;
+    }
+    .assistant-toggle-label {
+      color: var(--muted);
+      font-size: 0.68rem;
+      font-weight: 600;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+    }
+    .assistant-toggle-options {
+      display: inline-flex;
+      gap: 4px;
+    }
+    .assistant-toggle-btn {
+      min-height: 40px;
+      padding: 6px 10px;
+      border: 2px solid var(--text);
+      border-radius: 0;
+      background: #000;
+      color: var(--text);
+      font: inherit;
+      font-size: 0.68rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      cursor: pointer;
+    }
+    .assistant-toggle-btn[aria-pressed="true"] {
+      border-color: var(--accent);
+      background: var(--accent);
+      color: #000;
     }
 
     .copy-prompt-btn,
@@ -607,7 +650,13 @@
         padding: 12px;
       }
       .header-top {
+        flex-wrap: wrap;
         gap: 8px 10px;
+      }
+      .header-end { display: contents; }
+      .assistant-toggle {
+        width: 100%;
+        order: 3;
       }
       .brand { font-size: 1.85rem; }
       .sub {
@@ -636,6 +685,8 @@
         margin-bottom: 0;
       }
       .search-wrap .copy-prompt-btn { display: none; }
+      .assistant-toggle-label { font-size: 0.62rem; }
+      .assistant-toggle-btn { min-height: 32px; padding: 4px 8px; }
       .filter-btn { display: inline-flex; align-items: center; justify-content: center; }
       input[type="search"] {
         padding: 10px 12px;
@@ -673,7 +724,16 @@
             <h1 class="brand">My<span>GoTo</span></h1>
             <p class="sub">Skills · tools · UI kits · platforms. Plain English, pick fast.</p>
           </div>
-          <button type="button" class="copy-list-btn" id="copy-list" aria-label="Copy all catalog names and links">Copy list</button>
+          <div class="header-end">
+            <div class="assistant-toggle" role="group" aria-label="Prompt target">
+              <span class="assistant-toggle-label" aria-hidden="true">Prompts for</span>
+              <div class="assistant-toggle-options">
+                <button type="button" class="assistant-toggle-btn" data-assistant="codex" aria-pressed="true">Codex</button>
+                <button type="button" class="assistant-toggle-btn" data-assistant="cursor" aria-pressed="false">Cursor</button>
+              </div>
+            </div>
+            <button type="button" class="copy-list-btn" id="copy-list" aria-label="Copy all catalog names and links">Copy list</button>
+          </div>
         </div>
         <div class="masthead-actions">
           <button type="button" class="copy-prompt-btn" id="copy-prompt-mobile" aria-label="Copy project picker prompt">Copy project prompt</button>
@@ -694,37 +754,37 @@
 
   <script>
     const entries = [
-      { id: "stirlingpdf", name: "Stirling PDF", category: "tool", tags: ["pdf","docs"], summary: "Open-source PDF toolbox that runs in the browser.", useFor: "Merge, split, compress, rotate, OCR, and other quick PDF jobs.", skipWhen: "You need multi-user enterprise PDF workflow automation.", link: "https://www.stirlingpdf.com/", sourceNote: null, installHint: null, cursorHow: "Open in browser for PDF chores. Ask Cursor only if you need a script that calls its API or automates a repeat PDF step." },
-      { id: "strix", name: "Strix", category: "security", tags: ["pentest","agent","ci"], summary: "Open-source AI penetration testing agents that find and validate vulnerabilities.", useFor: "Scan an app or PR for real security issues before ship.", skipWhen: "You only need lint/typecheck and are not doing a security pass.", link: "https://github.com/usestrix/strix", sourceNote: null, installHint: "curl -sSL https://strix.ai/install | bash", cursorHow: "Install CLI, run a scan on this repo or URL, paste findings into Cursor and ask it to fix each issue." },
-      { id: "ecc", name: "ECC", category: "skill", tags: ["agent","harness","security"], summary: "Agent harness OS: skills, memory, security, and research-first workflows for Cursor and other agents.", useFor: "Serious multi-harness agent setup when you want structured skills and guardrails.", skipWhen: "The task is tiny and a direct Cursor prompt is enough.", link: "https://github.com/affaan-m/ECC", sourceNote: "Resolved from WhatsApp share T77FNIgWFFi8C8WUJ.", installHint: "npx ecc-universal install --guided", cursorHow: "Run guided install for Cursor, then use ECC skills/commands in Agent for non-trivial work." },
-      { id: "skills-addy", name: "skills.addy.ie", category: "skill", tags: ["skill-registry","agent"], summary: "Skill discovery hub for coding agents.", useFor: "Browse skills by workflow when you do not know the exact package name.", skipWhen: "You already know the skill name and install command.", link: "https://skills.addy.ie/", sourceNote: null, installHint: null, cursorHow: "Browse in browser, copy an install command, run it in the project terminal, then ask Cursor Agent to follow that skill." },
-      { id: "mattpocock-skills", name: "Matt Pocock Skills", category: "skill", tags: ["engineering","workflow"], summary: "Practical engineering skill set for real agent workflows.", useFor: "Structured flows: grill, TDD, architecture, spec-to-implement.", skipWhen: "The task is tiny and a direct prompt is faster.", link: "https://github.com/mattpocock/skills", sourceNote: "Also covered dump share xLJq9CkfeiniOsI9u (deduped).", installHint: "npx skills@latest add mattpocock/skills", cursorHow: "Run install, then in Cursor Agent use the skill commands (e.g. grill / TDD / implement) for non-trivial work." },
-      { id: "spec-kit", name: "Spec Kit", category: "tool", tags: ["spec","planning"], summary: "GitHub’s spec-first toolkit for turning ideas into buildable specs.", useFor: "Fuzzy requirements that need a concrete implementation spec first.", skipWhen: "You already have a clear small ticket.", link: "https://github.com/github/spec-kit", sourceNote: null, installHint: null, cursorHow: "Follow the Spec Kit README in this repo; ask Cursor to run its setup and produce a spec before coding." },
-      { id: "context7", name: "Context7", category: "tool", tags: ["context","docs"], summary: "Live library docs so agents get current API context.", useFor: "When the agent invents outdated APIs or generic library advice.", skipWhen: "The task is one file and the API is already obvious.", link: "https://context7.com/", sourceNote: null, installHint: null, cursorHow: "Add Context7 MCP/docs per their site for this stack; ask Cursor to pull live docs before coding against libraries." },
-      { id: "n8n", name: "n8n", category: "automation", tags: ["automation","workflow","integrations"], summary: "Open-source workflow automation for apps and APIs.", useFor: "Scheduled jobs, webhooks, and multi-app integrations without custom glue code.", skipWhen: "A 20-line local script already covers it.", link: "https://n8n.io/", sourceNote: "Resolved from WhatsApp share UpUS4O8aYTx0H1taR.", installHint: null, cursorHow: "Build workflows in the n8n UI; ask Cursor to write webhook payloads or scripts that n8n calls — not a Cursor skill." },
-      { id: "deploysafe", name: "DeploySafe", category: "security", tags: ["deploy","scan","live-url"], summary: "Live-URL security scanner with fix prompts for AI coding tools.", useFor: "Probe a deployed app for leaks, auth gaps, and common web risks before release.", skipWhen: "Nothing is deployed yet or you are not doing a security check.", link: "https://deploysafe.io/", sourceNote: "Resolved from WhatsApp share KwwaNA6lqe8NBlqz2.", installHint: null, cursorHow: "Scan the live URL in the browser, copy fix prompts into Cursor Agent, apply patches in this repo." },
-      { id: "uiux-promax", name: "UI UX Pro Max", category: "skill", tags: ["ui","ux","design-system"], summary: "Design-intelligence skill: styles, palettes, fonts, and UX rules for agents.", useFor: "Pick a concrete visual direction for landings and dashboards fast.", skipWhen: "The product already has a locked design system.", link: "https://github.com/nextlevelbuilder/ui-ux-pro-max-skill", sourceNote: "Resolved from WhatsApp share OeUb52ms4C3P5EIaz.", installHint: "npx skills add nextlevelbuilder/ui-ux-pro-max-skill", cursorHow: "Install the skill, then ask Cursor to generate a design system / restyle UI using UI UX Pro Max." },
-      { id: "taste-skill", name: "Taste Skill", category: "skill", tags: ["ui","anti-slop"], summary: "Anti-generic frontend skill that pushes unique visual taste.", useFor: "UI that should not look like default AI purple/cream layouts.", skipWhen: "Plain internal CRUD UI and speed matter more than polish.", link: "https://github.com/Leonxlnx/taste-skill", sourceNote: "Resolved from WhatsApp share XXwv7Iwm7XMBInKCB. Also covered dump share YdddIJWq6LcwXGWA6 (deduped).", installHint: "npx skills add https://github.com/Leonxlnx/taste-skill --skill \"design-taste-frontend\"", cursorHow: "Install design-taste-frontend, then ask Cursor Agent to restyle this UI with strong taste (not default AI look)." },
-      { id: "motion-principles", name: "Design Motion Principles", category: "skill", tags: ["motion","animation"], summary: "Two-mode motion skill: build or audit interaction animation.", useFor: "Polish motion on cards/modals, or audit existing animation quality.", skipWhen: "Static data page with no meaningful interactions.", link: "https://github.com/kylezantos/design-motion-principles", sourceNote: "Resolved from WhatsApp share SNmfERCwwwPz8537l.", installHint: "npx skills add kylezantos/design-motion-principles", cursorHow: "Install the skill; ask Cursor to add or audit motion on interactive UI using build/audit modes." },
-      { id: "vercel-guidelines", name: "Web Interface Guidelines", category: "guideline", tags: ["accessibility","ux","vercel"], summary: "Vercel’s practical UI/UX quality checklist for web interfaces.", useFor: "Quality pass on focus, forms, loading, a11y, and performance.", skipWhen: "You only need a rough prototype and will refine later.", link: "https://vercel.com/design/guidelines", sourceNote: "Resolved from WhatsApp share pp9dGV7WGYQwPQe6N.", installHint: "npx skills add https://github.com/vercel-labs/agent-skills --skill web-design-guidelines", cursorHow: "Install the skill or paste the guidelines link; ask Cursor to audit this UI against Web Interface Guidelines." },
-      { id: "awesome-design-skills", name: "Awesome Design Skills", category: "skill", tags: ["design-system","registry"], summary: "Large registry of design-related agent skills.", useFor: "Browse many visual directions and pull one style skill quickly.", skipWhen: "You tend to over-switch styles mid-project.", link: "https://github.com/bergside/awesome-design-skills", sourceNote: "Resolved from WhatsApp share 2wFcc0B9KGdN2S4nl.", installHint: "npx typeui.sh list", cursorHow: "Browse the registry, install one style skill into Cursor, then ask the agent to apply only that style." },
-      { id: "shadcn-skills-docs", name: "shadcn Skills / MCP Docs", category: "guideline", tags: ["shadcn","mcp"], summary: "Official shadcn docs for skills and MCP usage.", useFor: "Component-heavy UI with current shadcn patterns and MCP wiring.", skipWhen: "The project is not in the shadcn ecosystem.", link: "https://ui.shadcn.com/docs/skills", sourceNote: "Resolved from WhatsApp share c3QMe4dCeTkbRyKkp.", installHint: null, cursorHow: "Open docs; ask Cursor to set up shadcn skills/MCP and add components using current official patterns." },
-      { id: "google-aistudio", name: "Google AI Studio", category: "platform", tags: ["llm","google"], summary: "Google’s prompting and model playground.", useFor: "Quick model tests, prompt drafts, and API exploration.", skipWhen: "You need repo-aware coding actions inside Cursor.", link: "https://aistudio.google.com/", sourceNote: "Resolved from WhatsApp share YkgHKB7swboi8Up8B.", installHint: null, cursorHow: "Prototype prompts in AI Studio; paste winners into Cursor. Not an installable project skill." },
-      { id: "gsap-skills", name: "GSAP Skills", category: "skill", tags: ["animation","gsap","scroll"], summary: "Official GSAP agent skills: core, timelines, ScrollTrigger, React, plugins, and performance.", useFor: "Timeline and scroll-driven animation work where agents should use correct GSAP patterns.", skipWhen: "Plain CSS or Motion already covers the interaction.", link: "https://github.com/greensock/gsap-skills", sourceNote: "Resolved from WhatsApp share Nli1X76gIAYVnxrfR. Also covered dump share pymxLTznK11RDDRaP (deduped).", installHint: "npx skills add https://github.com/greensock/gsap-skills", cursorHow: "Install the skill pack, then ask Cursor Agent to animate with GSAP (timelines, ScrollTrigger, React hooks)." },
-      { id: "motion-dev", name: "Motion (prev Framer Motion)", category: "tool", tags: ["react","animation"], summary: "Production motion library for React, JS, and Vue.", useFor: "Animated dashboards, modals, and layout transitions in React apps.", skipWhen: "Static HTML with tiny micro-interactions is enough.", link: "https://motion.dev/", sourceNote: "Resolved from WhatsApp share 5dpW2lcL4tdMoMMo9.", installHint: "npm i motion", cursorHow: "npm i motion in a React/Vue app; ask Cursor to wire layout/modal animations." },
-      { id: "kokonutui", name: "KokonutUI", category: "ui-kit", tags: ["react","tailwind","shadcn"], summary: "Open-source animated components and templates.", useFor: "Assemble landing/dashboard UI faster with ready components.", skipWhen: "You need a fully bespoke design language from scratch.", link: "https://kokonutui.com/", sourceNote: "Resolved from WhatsApp share d7Spx1Skfd3lhCBu1.", installHint: "npx shadcn@latest add @kokonutui/<component>", cursorHow: "In a shadcn/Tailwind React app, ask Cursor to add specific KokonutUI components via the install hint." },
-      { id: "bklit-ui", name: "Bklit UI", category: "ui-kit", tags: ["charts","data-viz"], summary: "Design-focused data visualization component collection.", useFor: "Dashboard charts that should look polished quickly.", skipWhen: "A basic charting library already covers the need.", link: "https://bklit.com/", sourceNote: "Resolved from WhatsApp share 9c1HdiA9XiobTxnIl.", installHint: null, cursorHow: "Open docs, pick chart components; ask Cursor to integrate them into this dashboard UI." },
-      { id: "playwright", name: "Playwright", category: "tool", tags: ["testing","e2e"], summary: "End-to-end browser testing framework.", useFor: "Regression tests for forms, auth flows, and dashboard actions.", skipWhen: "A one-off manual check is enough for a tiny prototype.", link: "https://playwright.dev/", sourceNote: "Resolved from WhatsApp share i6frr0oFiIxYvsQKR.", installHint: "npm init playwright@latest", cursorHow: "Init Playwright in the repo; ask Cursor to write e2e tests for critical user flows." },
-      { id: "stitch", name: "Stitch (Google)", category: "platform", tags: ["design","ui","google-labs"], summary: "Google Labs AI canvas for generating UI designs and prototypes.", useFor: "Prompt-to-UI mockups and early design systems before coding.", skipWhen: "You already know the layout and will hand-write the frontend.", link: "https://stitch.withgoogle.com/", sourceNote: "Resolved from WhatsApp share 7rZycCZMGQHEjjs2D.", installHint: null, cursorHow: "Design screens in Stitch, export/describe them, ask Cursor to implement matching UI in this repo." },
-      { id: "google-gemini", name: "Google Gemini", category: "platform", tags: ["llm","google"], summary: "Gemini model ecosystem and assistant.", useFor: "Model comparison, prompting, and multimodal experiments.", skipWhen: "You only need repo-local help inside Cursor.", link: "https://gemini.google.com/", sourceNote: "Resolved from WhatsApp share tEcv6sGY3uQjZ6aTS.", installHint: null, cursorHow: "Use in browser for side experiments; keep repo coding in Cursor unless you need Gemini API wiring." },
-      { id: "markitdown", name: "MarkItDown", category: "tool", tags: ["markdown","pdf","docs","llm"], summary: "Microsoft Python CLI/library that converts Office, PDF, HTML, images, and more into Markdown for LLMs.", useFor: "Turn PDFs, Word/Excel/PPT, or HTML into clean Markdown before you paste or pipe it into Cursor.", skipWhen: "The file is already Markdown/plain text, or you need pixel-perfect human-facing conversion.", link: "https://github.com/microsoft/markitdown", sourceNote: null, installHint: "pip install 'markitdown[all]'", cursorHow: "Install in a venv, run markitdown file.pdf -o out.md, then ask Cursor to work from that Markdown instead of the binary." },
-      { id: "graphify", name: "Graphify", category: "skill", tags: ["knowledge-graph","code-map","cursor","ast"], summary: "Local AST knowledge-graph skill/CLI: maps code, docs, and PDFs into a queryable graph (no vector store).", useFor: "Large or unfamiliar repos where you want path/query/explain over blind grepping.", skipWhen: "Tiny single-file apps, or you only need a one-off file edit.", link: "https://github.com/Graphify-Labs/graphify", sourceNote: "PyPI package is graphifyy (double-y); CLI command is still graphify.", installHint: "uv tool install graphifyy && graphify cursor install", cursorHow: "Install CLI, run graphify cursor install, then in Cursor use /graphify . and query with graphify query/path/explain." },
-      { id: "scrapling", name: "Scrapling", category: "tool", tags: ["scraping","python","mcp"], summary: "Adaptive Python scraping framework: resilient selectors, fetchers, spiders, CLI/MCP, RAG-ready markdown.", useFor: "Crawl or extract from sites that break naive scrapers, or feed clean page markdown into agents.", skipWhen: "You only need Playwright e2e tests, or a one-off fetch with requests/BeautifulSoup is enough.", link: "https://github.com/D4Vinci/Scrapling", sourceNote: null, installHint: "pip install \"scrapling[all]\"", cursorHow: "Install in a venv; ask Cursor to write scrapers with Scrapling fetchers/spiders, or wire its MCP if you scrape from Agent often." },
-      { id: "lobehub", name: "LobeHub", category: "platform", tags: ["chat","agents","self-host","mcp"], summary: "Open-source multi-model chat and agent workspace with skills/MCP marketplace.", useFor: "Self-host a chat/agent hub outside Cursor for multi-model experiments and scheduled agents.", skipWhen: "You only need repo-local coding inside Cursor, or a single-vendor chat app is enough.", link: "https://lobehub.com", sourceNote: "Canonical product; repo at github.com/lobehub/lobehub.", installHint: null, cursorHow: "Run or use LobeHub in browser for chat/agent experiments; ask Cursor only when wiring APIs, MCP, or self-host config into a project." },
-      { id: "floci", name: "Floci", category: "tool", tags: ["aws","local","emulator","docker"], summary: "Free local AWS emulator (LocalStack-style) on :4566 — no account or auth token gate.", useFor: "Local/CI AWS against S3, Lambda, DynamoDB, and other services without a real AWS account.", skipWhen: "You are not using AWS APIs, or a thin mock (moto) already covers the few calls you need.", link: "https://github.com/floci-io/floci", sourceNote: "Young project (2026); watch maintenance. Prefer floci start or docker compose on floci/floci:latest.", installHint: "floci start", cursorHow: "Start Floci, eval $(floci env), point AWS SDK/CLI at localhost:4566; ask Cursor to wire endpoint/credentials for local tests." },
-      { id: "obsidian", name: "Obsidian", category: "platform", tags: ["notes","markdown","knowledge"], summary: "Local-first Markdown knowledge base with links, graph view, and a large plugin ecosystem.", useFor: "Personal notes, project wikis, and linked thinking outside the repo.", skipWhen: "You only need in-repo docs (README/docs/) or a one-off scratch note in the editor.", link: "https://obsidian.md/", sourceNote: null, installHint: null, cursorHow: "Keep notes in Obsidian; paste or export Markdown into Cursor when a decision or brief should drive code — not an installable skill." },
-      { id: "humanizer", name: "Humanizer", category: "skill", tags: ["writing","prose","anti-ai"], summary: "Agent skill that rewrites AI-sounding prose using Wikipedia “Signs of AI writing” patterns.", useFor: "README, launch posts, docs, or copy that should read human without changing the facts.", skipWhen: "The text is already your voice, or you are editing code/data not prose.", link: "https://github.com/blader/humanizer", sourceNote: null, installHint: "npx skills add blader/humanizer", cursorHow: "Install the skill, then ask Cursor Agent to /humanizer a pasted draft or a prose file path (it leaves code and frontmatter alone)." },
-      { id: "gstack", name: "gstack", category: "skill", tags: ["agent","workflow","review","qa"], summary: "Opinionated multi-role skill pack (plan, design, review, QA, ship) with a fast browse daemon; Cursor-installable.", useFor: "End-to-end agent workflows: office-hours → plan → implement → review/QA → ship.", skipWhen: "A tiny one-file task where Matt Pocock skills or a direct prompt is enough; avoid stacking blindly with ECC.", link: "https://github.com/garrytan/gstack", sourceNote: "Claude-first; use ./setup --host cursor for Cursor skills under ~/.cursor/skills/.", installHint: "git clone --single-branch --depth 1 https://github.com/garrytan/gstack.git ~/gstack && cd ~/gstack && ./setup --host cursor", cursorHow: "Clone and run setup --host cursor; then in Cursor Agent use gstack skills (/review, /qa, /ship, etc.) for non-trivial delivery work." }
+      { id: "stirlingpdf", name: "Stirling PDF", category: "tool", tags: ["pdf","docs"], summary: "Open-source PDF toolbox that runs in the browser.", useFor: "Merge, split, compress, rotate, OCR, and other quick PDF jobs.", skipWhen: "You need multi-user enterprise PDF workflow automation.", link: "https://www.stirlingpdf.com/", sourceNote: null, installHint: null, codexHow: "Open in the browser for PDF chores. Ask Codex for a script using its API only when the PDF step should be repeatable.", cursorHow: "Open in browser for PDF chores. Ask Cursor only if you need a script that calls its API or automates a repeat PDF step." },
+      { id: "strix", name: "Strix", category: "security", tags: ["pentest","agent","ci"], summary: "Open-source AI penetration testing agents that find and validate vulnerabilities.", useFor: "Scan an app or PR for real security issues before ship.", skipWhen: "You only need lint/typecheck and are not doing a security pass.", link: "https://github.com/usestrix/strix", sourceNote: null, installHint: "curl -sSL https://strix.ai/install | bash", codexHow: "Run the Strix CLI against this repo or a URL, then ask Codex to triage the findings and fix confirmed issues.", cursorHow: "Install CLI, run a scan on this repo or URL, paste findings into Cursor and ask it to fix each issue." },
+      { id: "ecc", name: "ECC", category: "skill", tags: ["agent","harness","security"], summary: "Agent harness OS: skills, memory, security, and research-first workflows for Cursor and other agents.", useFor: "Serious multi-harness agent setup when you want structured skills and guardrails.", skipWhen: "The task is tiny and a direct agent prompt is enough.", link: "https://github.com/affaan-m/ECC", sourceNote: "Resolved from WhatsApp share T77FNIgWFFi8C8WUJ.", installHint: "npx ecc-universal install --guided", codexHow: "Check ECC's guided installer for a supported Codex target before installing. If none is offered, use its workflow ideas as reference without copying Cursor configuration into Codex.", cursorHow: "Run guided install for Cursor, then use ECC skills/commands in Agent for non-trivial work." },
+      { id: "skills-addy", name: "skills.addy.ie", category: "skill", tags: ["skill-registry","agent"], summary: "Skill discovery hub for coding agents.", useFor: "Browse skills by workflow when you do not know the exact package name.", skipWhen: "You already know the skill name and install command.", link: "https://skills.addy.ie/", sourceNote: null, installHint: null, codexHow: "Browse for a skill, check its publisher's Codex install instructions, then ask Codex to use the installed skill for the matching task.", cursorHow: "Browse in browser, copy an install command, run it in the project terminal, then ask Cursor Agent to follow that skill." },
+      { id: "mattpocock-skills", name: "Matt Pocock Skills", category: "skill", tags: ["engineering","workflow"], summary: "Practical engineering skill set for real agent workflows.", useFor: "Structured flows: grill, TDD, architecture, spec-to-implement.", skipWhen: "The task is tiny and a direct prompt is faster.", link: "https://github.com/mattpocock/skills", sourceNote: "Also covered dump share xLJq9CkfeiniOsI9u (deduped).", installHint: "npx skills@latest add mattpocock/skills", codexHow: "Install the relevant skills for Codex, then ask Codex to use one named workflow such as grilling, TDD, or code review for the task.", cursorHow: "Run install, then in Cursor Agent use the skill commands (e.g. grill / TDD / implement) for non-trivial work." },
+      { id: "spec-kit", name: "Spec Kit", category: "tool", tags: ["spec","planning"], summary: "GitHub’s spec-first toolkit for turning ideas into buildable specs.", useFor: "Fuzzy requirements that need a concrete implementation spec first.", skipWhen: "You already have a clear small ticket.", link: "https://github.com/github/spec-kit", sourceNote: null, installHint: null, codexHow: "Have Codex read the Spec Kit setup for this repo and produce a project spec before coding; use an installer only if the current docs support Codex.", cursorHow: "Follow the Spec Kit README in this repo; ask Cursor to run its setup and produce a spec before coding." },
+      { id: "context7", name: "Context7", category: "tool", tags: ["context","docs"], summary: "Live library docs so agents get current API context.", useFor: "When the agent invents outdated APIs or generic library advice.", skipWhen: "The task is one file and the API is already obvious.", link: "https://context7.com/", sourceNote: null, installHint: null, codexHow: "Connect Context7 through Codex MCP using its current setup guide, then ask Codex to consult live library docs before using unfamiliar APIs.", cursorHow: "Add Context7 MCP/docs per their site for this stack; ask Cursor to pull live docs before coding against libraries." },
+      { id: "n8n", name: "n8n", category: "automation", tags: ["automation","workflow","integrations"], summary: "Open-source workflow automation for apps and APIs.", useFor: "Scheduled jobs, webhooks, and multi-app integrations without custom glue code.", skipWhen: "A 20-line local script already covers it.", link: "https://n8n.io/", sourceNote: "Resolved from WhatsApp share UpUS4O8aYTx0H1taR.", installHint: null, codexHow: "Build workflows in the n8n UI; ask Codex to write webhook payloads, scripts, or API integrations the workflow needs. This is not a Codex skill.", cursorHow: "Build workflows in the n8n UI; ask Cursor to write webhook payloads or scripts that n8n calls — not a Cursor skill." },
+      { id: "deploysafe", name: "DeploySafe", category: "security", tags: ["deploy","scan","live-url"], summary: "Live-URL security scanner with fix prompts for AI coding tools.", useFor: "Probe a deployed app for leaks, auth gaps, and common web risks before release.", skipWhen: "Nothing is deployed yet or you are not doing a security check.", link: "https://deploysafe.io/", sourceNote: "Resolved from WhatsApp share KwwaNA6lqe8NBlqz2.", installHint: null, codexHow: "Scan the live URL in the browser, bring findings to Codex, and ask it to verify and fix confirmed issues in this repo.", cursorHow: "Scan the live URL in the browser, copy fix prompts into Cursor Agent, apply patches in this repo." },
+      { id: "uiux-promax", name: "UI UX Pro Max", category: "skill", tags: ["ui","ux","design-system"], summary: "Design-intelligence skill: styles, palettes, fonts, and UX rules for agents.", useFor: "Pick a concrete visual direction for landings and dashboards fast.", skipWhen: "The product already has a locked design system.", link: "https://github.com/nextlevelbuilder/ui-ux-pro-max-skill", sourceNote: "Resolved from WhatsApp share OeUb52ms4C3P5EIaz.", installHint: "npx skills add nextlevelbuilder/ui-ux-pro-max-skill", codexHow: "Check the skill repo's Codex setup, install it for Codex if supported, then ask Codex to apply its design guidance to this UI.", cursorHow: "Install the skill, then ask Cursor to generate a design system / restyle UI using UI UX Pro Max." },
+      { id: "taste-skill", name: "Taste Skill", category: "skill", tags: ["ui","anti-slop"], summary: "Anti-generic frontend skill that pushes unique visual taste.", useFor: "UI that should not look like default AI purple/cream layouts.", skipWhen: "Plain internal CRUD UI and speed matter more than polish.", link: "https://github.com/Leonxlnx/taste-skill", sourceNote: "Resolved from WhatsApp share XXwv7Iwm7XMBInKCB. Also covered dump share YdddIJWq6LcwXGWA6 (deduped).", installHint: "npx skills add https://github.com/Leonxlnx/taste-skill --skill \"design-taste-frontend\"", codexHow: "Install design-taste-frontend for Codex using the skill publisher's instructions, then ask Codex to restyle the UI with that skill.", cursorHow: "Install design-taste-frontend, then ask Cursor Agent to restyle this UI with strong taste (not default AI look)." },
+      { id: "motion-principles", name: "Design Motion Principles", category: "skill", tags: ["motion","animation"], summary: "Two-mode motion skill: build or audit interaction animation.", useFor: "Polish motion on cards/modals, or audit existing animation quality.", skipWhen: "Static data page with no meaningful interactions.", link: "https://github.com/kylezantos/design-motion-principles", sourceNote: "Resolved from WhatsApp share SNmfERCwwwPz8537l.", installHint: "npx skills add kylezantos/design-motion-principles", codexHow: "Install the skill for Codex if supported, then ask Codex to build or audit the UI motion using the skill's modes.", cursorHow: "Install the skill; ask Cursor to add or audit motion on interactive UI using build/audit modes." },
+      { id: "vercel-guidelines", name: "Web Interface Guidelines", category: "guideline", tags: ["accessibility","ux","vercel"], summary: "Vercel’s practical UI/UX quality checklist for web interfaces.", useFor: "Quality pass on focus, forms, loading, a11y, and performance.", skipWhen: "You only need a rough prototype and will refine later.", link: "https://vercel.com/design/guidelines", sourceNote: "Resolved from WhatsApp share pp9dGV7WGYQwPQe6N.", installHint: "npx skills add https://github.com/vercel-labs/agent-skills --skill web-design-guidelines", codexHow: "Install the skill for Codex or give it the guidelines URL, then ask Codex to audit this UI and fix specific findings.", cursorHow: "Install the skill or paste the guidelines link; ask Cursor to audit this UI against Web Interface Guidelines." },
+      { id: "awesome-design-skills", name: "Awesome Design Skills", category: "skill", tags: ["design-system","registry"], summary: "Large registry of design-related agent skills.", useFor: "Browse many visual directions and pull one style skill quickly.", skipWhen: "You tend to over-switch styles mid-project.", link: "https://github.com/bergside/awesome-design-skills", sourceNote: "Resolved from WhatsApp share 2wFcc0B9KGdN2S4nl.", installHint: "npx typeui.sh list", codexHow: "Browse the registry, choose one relevant skill, confirm its Codex install path, and ask Codex to apply only that skill.", cursorHow: "Browse the registry, install one style skill into Cursor, then ask the agent to apply only that style." },
+      { id: "shadcn-skills-docs", name: "shadcn Skills / MCP Docs", category: "guideline", tags: ["shadcn","mcp"], summary: "Official shadcn docs for skills and MCP usage.", useFor: "Component-heavy UI with current shadcn patterns and MCP wiring.", skipWhen: "The project is not in the shadcn ecosystem.", link: "https://ui.shadcn.com/docs/skills", sourceNote: "Resolved from WhatsApp share c3QMe4dCeTkbRyKkp.", installHint: null, codexHow: "Use the official shadcn docs to set up its skills or MCP for Codex, then ask Codex to add specific components with current patterns.", cursorHow: "Open docs; ask Cursor to set up shadcn skills/MCP and add components using current official patterns." },
+      { id: "google-aistudio", name: "Google AI Studio", category: "platform", tags: ["llm","google"], summary: "Google’s prompting and model playground.", useFor: "Quick model tests, prompt drafts, and API exploration.", skipWhen: "You need repo-aware coding actions from your coding agent.", link: "https://aistudio.google.com/", sourceNote: "Resolved from WhatsApp share YkgHKB7swboi8Up8B.", installHint: null, codexHow: "Prototype prompts in AI Studio; bring useful results into Codex when repo changes are needed. This is a browser platform, not a Codex skill.", cursorHow: "Prototype prompts in AI Studio; paste winners into Cursor. Not an installable project skill." },
+      { id: "gsap-skills", name: "GSAP Skills", category: "skill", tags: ["animation","gsap","scroll"], summary: "Official GSAP agent skills: core, timelines, ScrollTrigger, React, plugins, and performance.", useFor: "Timeline and scroll-driven animation work where agents should use correct GSAP patterns.", skipWhen: "Plain CSS or Motion already covers the interaction.", link: "https://github.com/greensock/gsap-skills", sourceNote: "Resolved from WhatsApp share Nli1X76gIAYVnxrfR. Also covered dump share pymxLTznK11RDDRaP (deduped).", installHint: "npx skills add https://github.com/greensock/gsap-skills", codexHow: "Check the GSAP skill pack's Codex setup, install the relevant skill if supported, then ask Codex to use it for timelines or ScrollTrigger work.", cursorHow: "Install the skill pack, then ask Cursor Agent to animate with GSAP (timelines, ScrollTrigger, React hooks)." },
+      { id: "motion-dev", name: "Motion (prev Framer Motion)", category: "tool", tags: ["react","animation"], summary: "Production motion library for React, JS, and Vue.", useFor: "Animated dashboards, modals, and layout transitions in React apps.", skipWhen: "Static HTML with tiny micro-interactions is enough.", link: "https://motion.dev/", sourceNote: "Resolved from WhatsApp share 5dpW2lcL4tdMoMMo9.", installHint: "npm i motion", codexHow: "Install Motion in the app, then ask Codex to wire the specific React or Vue animations you need.", cursorHow: "npm i motion in a React/Vue app; ask Cursor to wire layout/modal animations." },
+      { id: "kokonutui", name: "KokonutUI", category: "ui-kit", tags: ["react","tailwind","shadcn"], summary: "Open-source animated components and templates.", useFor: "Assemble landing/dashboard UI faster with ready components.", skipWhen: "You need a fully bespoke design language from scratch.", link: "https://kokonutui.com/", sourceNote: "Resolved from WhatsApp share d7Spx1Skfd3lhCBu1.", installHint: "npx shadcn@latest add @kokonutui/<component>", codexHow: "In a shadcn/Tailwind React app, ask Codex to add the chosen KokonutUI components using their documented install command.", cursorHow: "In a shadcn/Tailwind React app, ask Cursor to add specific KokonutUI components via the install hint." },
+      { id: "bklit-ui", name: "Bklit UI", category: "ui-kit", tags: ["charts","data-viz"], summary: "Design-focused data visualization component collection.", useFor: "Dashboard charts that should look polished quickly.", skipWhen: "A basic charting library already covers the need.", link: "https://bklit.com/", sourceNote: "Resolved from WhatsApp share 9c1HdiA9XiobTxnIl.", installHint: null, codexHow: "Pick chart components in the docs, then ask Codex to integrate those specific components into the dashboard.", cursorHow: "Open docs, pick chart components; ask Cursor to integrate them into this dashboard UI." },
+      { id: "playwright", name: "Playwright", category: "tool", tags: ["testing","e2e"], summary: "End-to-end browser testing framework.", useFor: "Regression tests for forms, auth flows, and dashboard actions.", skipWhen: "A one-off manual check is enough for a tiny prototype.", link: "https://playwright.dev/", sourceNote: "Resolved from WhatsApp share i6frr0oFiIxYvsQKR.", installHint: "npm init playwright@latest", codexHow: "Initialize Playwright in the repo, then ask Codex to write end-to-end tests for the important user flows.", cursorHow: "Init Playwright in the repo; ask Cursor to write e2e tests for critical user flows." },
+      { id: "stitch", name: "Stitch (Google)", category: "platform", tags: ["design","ui","google-labs"], summary: "Google Labs AI canvas for generating UI designs and prototypes.", useFor: "Prompt-to-UI mockups and early design systems before coding.", skipWhen: "You already know the layout and will hand-write the frontend.", link: "https://stitch.withgoogle.com/", sourceNote: "Resolved from WhatsApp share 7rZycCZMGQHEjjs2D.", installHint: null, codexHow: "Design screens in Stitch, export or describe them, then ask Codex to implement the matching UI in this repo.", cursorHow: "Design screens in Stitch, export/describe them, ask Cursor to implement matching UI in this repo." },
+      { id: "google-gemini", name: "Google Gemini", category: "platform", tags: ["llm","google"], summary: "Gemini model ecosystem and assistant.", useFor: "Model comparison, prompting, and multimodal experiments.", skipWhen: "You only need repo-local help from your coding agent.", link: "https://gemini.google.com/", sourceNote: "Resolved from WhatsApp share tEcv6sGY3uQjZ6aTS.", installHint: null, codexHow: "Use Gemini in the browser for side experiments; use Codex for repo changes or Gemini API integration. This is not a Codex skill.", cursorHow: "Use in browser for side experiments; keep repo coding in Cursor unless you need Gemini API wiring." },
+      { id: "markitdown", name: "MarkItDown", category: "tool", tags: ["markdown","pdf","docs","llm"], summary: "Microsoft Python CLI/library that converts Office, PDF, HTML, images, and more into Markdown for LLMs.", useFor: "Turn PDFs, Word/Excel/PPT, or HTML into clean Markdown before passing it to a coding agent.", skipWhen: "The file is already Markdown/plain text, or you need pixel-perfect human-facing conversion.", link: "https://github.com/microsoft/markitdown", sourceNote: null, installHint: "pip install 'markitdown[all]'", codexHow: "Install MarkItDown in a venv, convert the source file to Markdown, then ask Codex to work from the Markdown output.", cursorHow: "Install in a venv, run markitdown file.pdf -o out.md, then ask Cursor to work from that Markdown instead of the binary." },
+      { id: "graphify", name: "Graphify", category: "skill", tags: ["knowledge-graph","code-map","cursor","ast"], summary: "Local AST knowledge-graph skill/CLI: maps code, docs, and PDFs into a queryable graph (no vector store).", useFor: "Large or unfamiliar repos where you want path/query/explain over blind grepping.", skipWhen: "Tiny single-file apps, or you only need a one-off file edit.", link: "https://github.com/Graphify-Labs/graphify", sourceNote: "PyPI package is graphifyy (double-y); CLI command is still graphify.", installHint: "uv tool install graphifyy && graphify cursor install", codexHow: "Install the graphifyy CLI and use its query/path/explain output with Codex. The upstream Cursor integration does not establish Codex support; check current docs before agent integration.", codexInstallHint: "uv tool install graphifyy", cursorHow: "Install CLI, run graphify cursor install, then in Cursor use /graphify . and query with graphify query/path/explain." },
+      { id: "scrapling", name: "Scrapling", category: "tool", tags: ["scraping","python","mcp"], summary: "Adaptive Python scraping framework: resilient selectors, fetchers, spiders, CLI/MCP, RAG-ready markdown.", useFor: "Crawl or extract from sites that break naive scrapers, or feed clean page markdown into agents.", skipWhen: "You only need Playwright e2e tests, or a one-off fetch with requests/BeautifulSoup is enough.", link: "https://github.com/D4Vinci/Scrapling", sourceNote: null, installHint: "pip install \"scrapling[all]\"", codexHow: "Install Scrapling in a venv; ask Codex to write fetchers or spiders, or configure its MCP for Codex if the current docs support it.", cursorHow: "Install in a venv; ask Cursor to write scrapers with Scrapling fetchers/spiders, or wire its MCP if you scrape from Agent often." },
+      { id: "lobehub", name: "LobeHub", category: "platform", tags: ["chat","agents","self-host","mcp"], summary: "Open-source multi-model chat and agent workspace with skills/MCP marketplace.", useFor: "Self-host a chat/agent hub outside your coding agent for multi-model experiments and scheduled agents.", skipWhen: "You only need repo-local coding, or a single-vendor chat app is enough.", link: "https://lobehub.com", sourceNote: "Canonical product; repo at github.com/lobehub/lobehub.", installHint: null, codexHow: "Use LobeHub in the browser for chat and agent experiments; ask Codex to wire its APIs, MCP, or self-host config only when the repo needs it.", cursorHow: "Run or use LobeHub in browser for chat/agent experiments; ask Cursor only when wiring APIs, MCP, or self-host config into a project." },
+      { id: "floci", name: "Floci", category: "tool", tags: ["aws","local","emulator","docker"], summary: "Free local AWS emulator (LocalStack-style) on :4566 — no account or auth token gate.", useFor: "Local/CI AWS against S3, Lambda, DynamoDB, and other services without a real AWS account.", skipWhen: "You are not using AWS APIs, or a thin mock (moto) already covers the few calls you need.", link: "https://github.com/floci-io/floci", sourceNote: "Young project (2026); watch maintenance. Prefer floci start or docker compose on floci/floci:latest.", installHint: "floci start", codexHow: "Start Floci and point the AWS SDK or CLI at its local endpoint; ask Codex to configure and test this repo against the emulator.", cursorHow: "Start Floci, eval $(floci env), point AWS SDK/CLI at localhost:4566; ask Cursor to wire endpoint/credentials for local tests." },
+      { id: "obsidian", name: "Obsidian", category: "platform", tags: ["notes","markdown","knowledge"], summary: "Local-first Markdown knowledge base with links, graph view, and a large plugin ecosystem.", useFor: "Personal notes, project wikis, and linked thinking outside the repo.", skipWhen: "You only need in-repo docs (README/docs/) or a one-off scratch note in the editor.", link: "https://obsidian.md/", sourceNote: null, installHint: null, codexHow: "Keep notes in Obsidian; paste or export relevant Markdown into Codex when it should guide repo work. This is not an installable skill.", cursorHow: "Keep notes in Obsidian; paste or export Markdown into Cursor when a decision or brief should drive code — not an installable skill." },
+      { id: "humanizer", name: "Humanizer", category: "skill", tags: ["writing","prose","anti-ai"], summary: "Agent skill that rewrites AI-sounding prose using Wikipedia “Signs of AI writing” patterns.", useFor: "README, launch posts, docs, or copy that should read human without changing the facts.", skipWhen: "The text is already your voice, or you are editing code/data not prose.", link: "https://github.com/blader/humanizer", sourceNote: null, installHint: "npx skills add blader/humanizer", codexHow: "Install the Humanizer skill for Codex if supported, then ask Codex to apply it to a prose draft while leaving code alone.", cursorHow: "Install the skill, then ask Cursor Agent to /humanizer a pasted draft or a prose file path (it leaves code and frontmatter alone)." },
+      { id: "gstack", name: "gstack", category: "skill", tags: ["agent","workflow","review","qa"], summary: "Opinionated multi-role skill pack (plan, design, review, QA, ship) with a fast browse daemon; Cursor-installable.", useFor: "End-to-end agent workflows: office-hours → plan → implement → review/QA → ship.", skipWhen: "A tiny one-file task where Matt Pocock skills or a direct prompt is enough; avoid stacking blindly with ECC.", link: "https://github.com/garrytan/gstack", sourceNote: "Claude-first; Cursor setup is documented upstream. Verify Codex support separately.", installHint: "git clone --single-branch --depth 1 https://github.com/garrytan/gstack.git ~/gstack && cd ~/gstack && ./setup --host cursor", codexHow: "The catalog's install command targets Cursor. Check gstack's current docs for Codex support before installing; otherwise use its workflow ideas as reference only.", codexInstallHint: null, cursorHow: "Clone and run setup --host cursor; then in Cursor Agent use gstack skills (/review, /qa, /ship, etc.) for non-trivial delivery work." }
     ];
 
     const categories = [
@@ -738,9 +798,18 @@
       ["automation", "Automation"]
     ];
 
+    function savedAssistant() {
+      try {
+        return localStorage.getItem("mygoto-assistant") === "cursor" ? "cursor" : "codex";
+      } catch (err) {
+        return "codex";
+      }
+    }
+
     const state = {
       q: "",
-      cat: "all"
+      cat: "all",
+      assistant: savedAssistant()
     };
     let firstPaint = true;
 
@@ -748,6 +817,30 @@
     const chipsEl = document.getElementById("chips");
     const catalogEl = document.getElementById("catalog");
     const statsEl = document.getElementById("stats");
+    const assistantButtons = [...document.querySelectorAll(".assistant-toggle-btn")];
+
+    function assistantName() {
+      return state.assistant === "codex" ? "Codex" : "Cursor";
+    }
+
+    function entryHow(entry) {
+      return state.assistant === "codex" ? entry.codexHow : entry.cursorHow;
+    }
+
+    function entryInstall(entry) {
+      return state.assistant === "codex" && "codexInstallHint" in entry
+        ? entry.codexInstallHint
+        : entry.installHint;
+    }
+
+    function syncAssistantControls() {
+      assistantButtons.forEach((button) => {
+        button.setAttribute("aria-pressed", button.dataset.assistant === state.assistant ? "true" : "false");
+      });
+      copyButtons.forEach((button) => {
+        button.setAttribute("aria-label", "Copy " + assistantName() + " project picker prompt");
+      });
+    }
 
     function parseHash() {
       const raw = location.hash.replace(/^#/, "");
@@ -802,13 +895,16 @@
         entry.link,
         ...(entry.tags || []),
         entry.sourceNote || "",
-        entry.installHint || "",
-        entry.cursorHow || ""
+        entryInstall(entry) || "",
+        entryHow(entry) || ""
       ].join(" ").toLowerCase();
       return hay.includes(needle);
     }
 
-    function renderCards() {
+    function renderCards(preserveDetails = false) {
+      const openIds = preserveDetails
+        ? new Set([...catalogEl.querySelectorAll(".card details[open]")].map((details) => details.closest(".card").dataset.id))
+        : new Set();
       const filtered = entries.filter((entry) => {
         const catOk = state.cat === "all" ? true : entry.category === state.cat;
         return catOk && matches(entry, state.q);
@@ -829,21 +925,23 @@
         const card = document.createElement("article");
         card.className = "card" + (firstPaint ? " card--enter" : "");
         card.dataset.cat = entry.category;
+        card.dataset.id = entry.id;
         if (firstPaint) {
           card.style.animationDelay = Math.min(index, 16) * 35 + "ms";
         }
 
         const tags = (entry.tags || []).map((t) => "<span class=\"tag\">" + escapeHtml(t) + "</span>").join("");
         const note = entry.sourceNote ? "<p class=\"note\"><span class=\"label\">Note:</span>" + escapeHtml(entry.sourceNote) + "</p>" : "";
-        const install = entry.installHint
-          ? "<p class=\"line\"><span class=\"label\">Install:</span><span class=\"code-with-copy\"><code>" + escapeHtml(entry.installHint) + "</code>"
+        const installHint = entryInstall(entry);
+        const install = installHint
+          ? "<p class=\"line\"><span class=\"label\">Install:</span><span class=\"code-with-copy\"><code>" + escapeHtml(installHint) + "</code>"
             + "<button type=\"button\" class=\"copy-code-btn\" aria-label=\"Copy install command\" title=\"Copy\">"
             + "<svg viewBox=\"0 0 24 24\" aria-hidden=\"true\"><rect x=\"9\" y=\"9\" width=\"13\" height=\"13\"></rect><path d=\"M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1\"></path></svg>"
             + "</button></span></p>"
           : "";
-        const how = entry.cursorHow ? "<p class=\"line\"><span class=\"label\">Cursor:</span>" + escapeHtml(entry.cursorHow) + "</p>" : "";
+        const how = entryHow(entry) ? "<p class=\"line\"><span class=\"label\">" + assistantName() + ":</span>" + escapeHtml(entryHow(entry)) + "</p>" : "";
         const openLabel = "Open " + entry.name + " (opens in new tab)";
-        const copyPromptLabel = "Copy Cursor prompt for " + entry.name;
+        const copyPromptLabel = "Copy " + assistantName() + " prompt for " + entry.name;
 
         card.innerHTML = ""
           + "<div class=\"top\">"
@@ -864,6 +962,7 @@
           + "<button type=\"button\" class=\"copy-item-prompt-btn\" data-id=\"" + escapeAttr(entry.id) + "\" aria-label=\"" + escapeAttr(copyPromptLabel) + "\">Copy prompt</button>"
           + "<a class=\"link-btn\" href=\"" + escapeAttr(entry.link) + "\" target=\"_blank\" rel=\"noopener noreferrer\" aria-label=\"" + escapeAttr(openLabel) + "\">Open ↗</a>"
           + "</div>";
+        if (openIds.has(entry.id)) card.querySelector("details").open = true;
         catalogEl.appendChild(card);
       });
 
@@ -885,9 +984,10 @@
     const CHECK_ICON = '<svg viewBox="0 0 24 24" aria-hidden="true"><polyline points="20 6 9 17 4 12"></polyline></svg>';
 
     function buildItemPrompt(entry) {
-      const install = entry.installHint || "(none — open link / follow Cursor how)";
+      const name = assistantName();
+      const install = entryInstall(entry) || "(none — open link / follow " + name + " how)";
       return [
-        "You are helping me use ONE MyGoTo item in THIS Cursor project.",
+        "You are helping me use ONE MyGoTo item in THIS " + name + " project.",
         "Do not browse or recommend other catalog items.",
         "",
         "Name: " + entry.name,
@@ -895,14 +995,14 @@
         "What it is: " + entry.summary,
         "Use for: " + entry.useFor,
         "Skip when: " + entry.skipWhen,
-        "Cursor how: " + (entry.cursorHow || "(none)"),
+        name + " how: " + (entryHow(entry) || "(none)"),
         "Install: " + install,
         "Link: " + entry.link,
         "",
         "Do this:",
         "1. Inspect this repo briefly (README, stack, main folders).",
         "2. If Skip when applies here, say so and stop.",
-        "3. Otherwise follow Cursor how / Install and apply ONLY this item.",
+        "3. Otherwise follow " + name + " how / Install and apply ONLY this item.",
         "4. Keep answers short and action-first."
       ].join("\n");
     }
@@ -913,12 +1013,12 @@
         const id = itemPromptBtn.getAttribute("data-id");
         const entry = entries.find((e) => e.id === id);
         if (!entry) return;
-        const label = "Copy Cursor prompt for " + entry.name;
+        const label = "Copy " + assistantName() + " prompt for " + entry.name;
         try {
           await navigator.clipboard.writeText(buildItemPrompt(entry));
           itemPromptBtn.textContent = "Copied";
           itemPromptBtn.classList.add("is-done");
-          itemPromptBtn.setAttribute("aria-label", "Copied");
+          itemPromptBtn.setAttribute("aria-label", "Copied " + assistantName() + " prompt for " + entry.name);
           setTimeout(() => {
             itemPromptBtn.textContent = "Copy prompt";
             itemPromptBtn.classList.remove("is-done");
@@ -926,7 +1026,7 @@
           }, 1600);
         } catch (err) {
           itemPromptBtn.textContent = "Copy failed";
-          itemPromptBtn.setAttribute("aria-label", "Copy failed");
+          itemPromptBtn.setAttribute("aria-label", "Failed to copy " + assistantName() + " prompt for " + entry.name);
         }
         return;
       }
@@ -950,7 +1050,21 @@
       }
     });
 
-    const PROJECT_PROMPT = `You are helping me set up THIS Cursor project using my personal MyGoTo catalog.
+    const PROJECT_PROMPTS = {
+      codex: `You are helping me set up THIS Codex project using my personal MyGoTo catalog.
+
+Catalog (live): https://saffinxavier.github.io/mygoto/
+Fallback: https://github.com/saffinxavier/mygoto (open index.html) or local MyGoTo repo.
+
+Do this:
+1. Inspect this repo (README, package manifests, scripts, main folders, stack).
+2. From the MyGoTo catalog, recommend ONLY 3–7 items that fit THIS project. Do not dump the whole catalog.
+3. For each pick, give: name, category, why it fits here, exact Codex how-to (from the card’s Codex / Install fields), and when to skip.
+4. Prefer: skills for agent workflow, tools/ui-kits for code deps, guidelines for UI audits. Verify Codex compatibility before suggesting a skill or install command. Skip unrelated platforms.
+5. End with a short install order I can run in the terminal or Codex.
+
+Keep answers short and action-first.`,
+      cursor: `You are helping me set up THIS Cursor project using my personal MyGoTo catalog.
 
 Catalog (live): https://saffinxavier.github.io/mygoto/
 Fallback: https://github.com/saffinxavier/mygoto (open index.html) or local MyGoTo repo.
@@ -962,33 +1076,62 @@ Do this:
 4. Prefer: skills for agent workflow, tools/ui-kits for code deps, guidelines for UI audits. Skip unrelated platforms.
 5. End with a short install order I can run in the terminal / Cursor Agent.
 
-Keep answers short and action-first.`;
+Keep answers short and action-first.`
+    };
 
     const copyButtons = [
       document.getElementById("copy-prompt"),
       document.getElementById("copy-prompt-mobile")
     ].filter(Boolean);
+    let projectFeedbackTimer;
+
+    function resetProjectButtons() {
+      clearTimeout(projectFeedbackTimer);
+      copyButtons.forEach((button) => {
+        button.textContent = "Copy project prompt";
+        button.classList.remove("is-done");
+      });
+      syncAssistantControls();
+    }
 
     async function copyProjectPrompt(btn) {
+      const name = assistantName();
       try {
-        await navigator.clipboard.writeText(PROJECT_PROMPT);
+        await navigator.clipboard.writeText(PROJECT_PROMPTS[state.assistant]);
+        if (name !== assistantName()) return;
+        clearTimeout(projectFeedbackTimer);
         copyButtons.forEach((el) => {
           el.textContent = "Copied";
           el.classList.add("is-done");
+          el.setAttribute("aria-label", "Copied " + name + " project picker prompt");
         });
-        setTimeout(() => {
-          copyButtons.forEach((el) => {
-            el.textContent = "Copy project prompt";
-            el.classList.remove("is-done");
-          });
-        }, 1600);
+        projectFeedbackTimer = setTimeout(resetProjectButtons, 1600);
       } catch (err) {
         btn.textContent = "Copy failed";
+        btn.setAttribute("aria-label", "Failed to copy " + name + " project picker prompt");
       }
     }
     copyButtons.forEach((btn) => {
       btn.addEventListener("click", () => copyProjectPrompt(btn));
     });
+    assistantButtons.forEach((button) => {
+      button.addEventListener("click", () => {
+        const nextAssistant = button.dataset.assistant;
+        if (nextAssistant === state.assistant) return;
+        const scrollY = window.scrollY;
+        state.assistant = nextAssistant;
+        try {
+          localStorage.setItem("mygoto-assistant", nextAssistant);
+        } catch (err) {
+          // The current page still uses the selected assistant when storage is unavailable.
+        }
+        resetProjectButtons();
+        renderCards(true);
+        window.scrollTo(window.scrollX, scrollY);
+        syncHeaderOffset();
+      });
+    });
+    syncAssistantControls();
 
     function catalogNameLinkList() {
       return entries.map((entry) => `${entry.name}\n${entry.link}`).join("\n\n");

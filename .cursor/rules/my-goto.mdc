@@ -15,7 +15,8 @@ When working in this project:
 4. For every added entry, include plain-English:
    - what it is,
    - use for,
-   - skip when.
+   - skip when,
+   - Codex how and Cursor how; verify assistant-specific install hints.
 5. Prefer canonical repo/docs URLs.
 6. If only a short/share link is available, still add the entry and set `sourceNote` to verify destination.
 7. Keep the app static and lightweight: no framework or build step unless explicitly requested.
